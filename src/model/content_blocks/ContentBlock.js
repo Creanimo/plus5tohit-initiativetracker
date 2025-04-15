@@ -1,7 +1,7 @@
 class ContentBlock {
     constructor({
         name,
-        type,
+        type = "ContentBlock",
                 }) {
     }
 }

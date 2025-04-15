@@ -1,7 +1,8 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 
 export default {
-    input: "./src/index.js",
+    input: "./src/app.js",
     output: [
         {
             file: "dist/app.esm.js",
@@ -11,5 +12,6 @@ export default {
     ],
     plugins: [
         nodeResolve(),
+        commonjs(),
     ],
 };

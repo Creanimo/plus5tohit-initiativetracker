@@ -22,6 +22,11 @@ class Encounter {
     encounterElements;
 
     /**
+     * @type {EncounterElement[]} Array of encounter elements (e.g., creatures, PCs, NPCs, lair actions).
+     */
+    encounterElementsOutOfInitiative;
+
+    /**
      * @type {string[]} Initiative order resolved from initiative values and tie-breakers.
      */
     _initiativeOrder;
@@ -62,6 +67,7 @@ class Encounter {
      * @param {string} options.id
      * @param {ContentBlock[]} options.globalContentBlocks Global content blocks associated with the encounter.
      * @param {EncounterElement[]} options.encounterElements Array of encounter elements (e.g., creatures, NPCs).
+     * @param {EncounterElement[]} options.encounterElementsOutOfInitiative Array of encounter elements (e.g., creatures, NPCs).
      * @param {Object.<string, number>} [options.initiativeValues] Rolled initiative values mapped to the IDs of encounter elements.
      * @param {Object.<number, string[]>} [options.initiativeTieBreakers] Tie-breakers for initiative values.
      * @param {number} [options.currentRound=1] Current round of the encounter.
@@ -73,7 +79,8 @@ class Encounter {
                     name,
                     id = "",
                     globalContentBlocks = [],
-                    encounterElements,
+                    encounterElements = [],
+                    encounterElementsOutOfInitiative = [],
                     initiativeValues = {},
                     initiativeTieBreakers = {},
                     currentRound = 1,
@@ -89,12 +96,15 @@ class Encounter {
         }
         this.globalContentBlocks = globalContentBlocks;
         this.encounterElements = encounterElements;
+        this.encounterElementsOutOfInitiative = encounterElementsOutOfInitiative;
         this._initiativeOrder = [];
         this.initiativeValues = initiativeValues;
         this.initiativeTieBreakers = initiativeTieBreakers;
         this.currentRound = currentRound;
         this.currentTurn = currentTurn;
         this.activeStatusEffects = activeStatusEffects;
+
+        this._dependencies.log.info(this, "Initialized a new Encounter");
     }
 
     /**

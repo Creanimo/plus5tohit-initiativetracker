@@ -1,3 +1,5 @@
+import {dependencyInjection} from "../../tools/commonDependencies.js";
+
 class EncounterElement {
     /**
      *
@@ -9,10 +11,12 @@ class EncounterElement {
         name,
         id = "",
         type,
+        dependencies = dependencyInjection,
                 }) {
         this.name = name;
         this.id = id;
         this.type = type;
+        this._dependencies = dependencies;
     }
 }
 
