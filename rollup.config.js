@@ -11,7 +11,9 @@ export default {
         },
     ],
     plugins: [
-        nodeResolve(),
+        nodeResolve({
+            browser: true
+        }),
         commonjs(),
     ],
 };

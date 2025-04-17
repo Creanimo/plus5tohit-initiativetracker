@@ -1,31 +1,6 @@
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-function getAugmentedNamespace(n) {
-  if (Object.prototype.hasOwnProperty.call(n, '__esModule')) return n;
-  var f = n.default;
-	if (typeof f == "function") {
-		var a = function a () {
-			if (this instanceof a) {
-        return Reflect.construct(f, arguments, this.constructor);
-			}
-			return f.apply(this, arguments);
-		};
-		a.prototype = f.prototype;
-  } else a = {};
-  Object.defineProperty(a, '__esModule', {value: true});
-	Object.keys(n).forEach(function (k) {
-		var d = Object.getOwnPropertyDescriptor(n, k);
-		Object.defineProperty(a, k, d.get ? d : {
-			enumerable: true,
-			get: function () {
-				return n[k];
-			}
-		});
-	});
-	return a;
-}
-
-var Roarr = {};
+var browser = {};
 
 var createLogger = {};
 
@@ -1332,39 +1307,7 @@ function requireCreateLogger () {
 	return createLogger;
 }
 
-var createRoarrInitialGlobalState = {};
-
-var createNodeWriter = {};
-
-var hasRequiredCreateNodeWriter;
-
-function requireCreateNodeWriter () {
-	if (hasRequiredCreateNodeWriter) return createNodeWriter;
-	hasRequiredCreateNodeWriter = 1;
-	Object.defineProperty(createNodeWriter, "__esModule", { value: true });
-	createNodeWriter.createNodeWriter = void 0;
-	const createBlockingWriter = (stream) => {
-	    return (message) => {
-	        stream.write(message + '\n');
-	    };
-	};
-	const createNodeWriter$1 = () => {
-	    var _a;
-	    // eslint-disable-next-line node/no-process-env
-	    const targetStream = ((_a = process.env.ROARR_STREAM) !== null && _a !== void 0 ? _a : 'STDOUT').toUpperCase();
-	    const stream = targetStream.toUpperCase() === 'STDOUT' ? process.stdout : process.stderr;
-	    stream.on('error', (error) => {
-	        if (error.code === 'EPIPE') {
-	            return;
-	        }
-	        throw error;
-	    });
-	    return createBlockingWriter(stream);
-	};
-	createNodeWriter.createNodeWriter = createNodeWriter$1;
-	
-	return createNodeWriter;
-}
+var createRoarrInitialGlobalStateBrowser = {};
 
 var semverCompare;
 var hasRequiredSemverCompare;
@@ -1388,55 +1331,36 @@ function requireSemverCompare () {
 	return semverCompare;
 }
 
-var hasRequiredCreateRoarrInitialGlobalState;
+var hasRequiredCreateRoarrInitialGlobalStateBrowser;
 
-function requireCreateRoarrInitialGlobalState () {
-	if (hasRequiredCreateRoarrInitialGlobalState) return createRoarrInitialGlobalState;
-	hasRequiredCreateRoarrInitialGlobalState = 1;
-	var __importDefault = (createRoarrInitialGlobalState && createRoarrInitialGlobalState.__importDefault) || function (mod) {
+function requireCreateRoarrInitialGlobalStateBrowser () {
+	if (hasRequiredCreateRoarrInitialGlobalStateBrowser) return createRoarrInitialGlobalStateBrowser;
+	hasRequiredCreateRoarrInitialGlobalStateBrowser = 1;
+	var __importDefault = (createRoarrInitialGlobalStateBrowser && createRoarrInitialGlobalStateBrowser.__importDefault) || function (mod) {
 	    return (mod && mod.__esModule) ? mod : { "default": mod };
 	};
-	Object.defineProperty(createRoarrInitialGlobalState, "__esModule", { value: true });
-	createRoarrInitialGlobalState.createRoarrInitialGlobalState = void 0;
+	Object.defineProperty(createRoarrInitialGlobalStateBrowser, "__esModule", { value: true });
+	createRoarrInitialGlobalStateBrowser.createRoarrInitialGlobalStateBrowser = void 0;
 	const config_1 = requireConfig();
-	const createNodeWriter_1 = requireCreateNodeWriter();
 	const semver_compare_1 = __importDefault(requireSemverCompare());
-	const createRoarrInitialGlobalState$1 = (currentState) => {
+	const createRoarrInitialGlobalStateBrowser$1 = (currentState) => {
 	    const versions = (currentState.versions || []).concat();
 	    if (versions.length > 1) {
 	        versions.sort(semver_compare_1.default);
 	    }
-	    const currentIsLatestVersion = !versions.length ||
-	        (0, semver_compare_1.default)(config_1.ROARR_VERSION, versions[versions.length - 1]) === 1;
 	    if (!versions.includes(config_1.ROARR_VERSION)) {
 	        versions.push(config_1.ROARR_VERSION);
 	    }
 	    versions.sort(semver_compare_1.default);
-	    let newState = {
-	        onceLog: new Set(),
+	    return {
 	        sequence: 0,
 	        ...currentState,
 	        versions,
 	    };
-	    if (currentIsLatestVersion || !newState.write) {
-	        try {
-	            // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-	            const AsyncLocalStorage = require('node:async_hooks').AsyncLocalStorage;
-	            const asyncLocalStorage = new AsyncLocalStorage();
-	            newState = {
-	                ...newState,
-	                asyncLocalStorage,
-	                write: (0, createNodeWriter_1.createNodeWriter)(),
-	            };
-	            // eslint-disable-next-line no-empty
-	        }
-	        catch (_a) { }
-	    }
-	    return newState;
 	};
-	createRoarrInitialGlobalState.createRoarrInitialGlobalState = createRoarrInitialGlobalState$1;
+	createRoarrInitialGlobalStateBrowser.createRoarrInitialGlobalStateBrowser = createRoarrInitialGlobalStateBrowser$1;
 	
-	return createRoarrInitialGlobalState;
+	return createRoarrInitialGlobalStateBrowser;
 }
 
 var stringify = {};
@@ -1511,18 +1435,18 @@ function requireGetLogLevelName () {
 	return getLogLevelName;
 }
 
-var hasRequiredRoarr;
+var hasRequiredBrowser;
 
-function requireRoarr () {
-	if (hasRequiredRoarr) return Roarr;
-	hasRequiredRoarr = 1;
+function requireBrowser () {
+	if (hasRequiredBrowser) return browser;
+	hasRequiredBrowser = 1;
 	(function (exports) {
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.getLogLevelName = exports.logLevels = exports.Roarr = exports.ROARR = void 0;
 		const createLogger_1 = requireCreateLogger();
-		const createRoarrInitialGlobalState_1 = requireCreateRoarrInitialGlobalState();
+		const createRoarrInitialGlobalStateBrowser_1 = requireCreateRoarrInitialGlobalStateBrowser();
 		const stringify_1 = requireStringify();
-		const ROARR = (0, createRoarrInitialGlobalState_1.createRoarrInitialGlobalState)(globalThis.ROARR || {});
+		const ROARR = (0, createRoarrInitialGlobalStateBrowser_1.createRoarrInitialGlobalStateBrowser)(globalThis.ROARR || {});
 		exports.ROARR = ROARR;
 		globalThis.ROARR = ROARR;
 		const serializeMessage = (message) => {
@@ -1542,11 +1466,11 @@ function requireRoarr () {
 		var getLogLevelName_1 = requireGetLogLevelName();
 		Object.defineProperty(exports, "getLogLevelName", { enumerable: true, get: function () { return getLogLevelName_1.getLogLevelName; } });
 		
-	} (Roarr));
-	return Roarr;
+	} (browser));
+	return browser;
 }
 
-var RoarrExports = requireRoarr();
+var browserExports = requireBrowser();
 
 var dist = {};
 
@@ -1672,12 +1596,12 @@ function requireIsArguments () {
 	return isArguments;
 }
 
-var implementation$1;
-var hasRequiredImplementation$1;
+var implementation;
+var hasRequiredImplementation;
 
-function requireImplementation$1 () {
-	if (hasRequiredImplementation$1) return implementation$1;
-	hasRequiredImplementation$1 = 1;
+function requireImplementation () {
+	if (hasRequiredImplementation) return implementation;
+	hasRequiredImplementation = 1;
 
 	var keysShim;
 	if (!Object.keys) {
@@ -1798,8 +1722,8 @@ function requireImplementation$1 () {
 			return theKeys;
 		};
 	}
-	implementation$1 = keysShim;
-	return implementation$1;
+	implementation = keysShim;
+	return implementation;
 }
 
 var objectKeys;
@@ -1813,7 +1737,7 @@ function requireObjectKeys () {
 	var isArgs = requireIsArguments();
 
 	var origKeys = Object.keys;
-	var keysShim = origKeys ? function keys(o) { return origKeys(o); } : requireImplementation$1();
+	var keysShim = origKeys ? function keys(o) { return origKeys(o); } : requireImplementation();
 
 	var originalKeys = Object.keys;
 
@@ -2072,15 +1996,24 @@ function requireDefineProperties () {
 	return defineProperties_1;
 }
 
-var implementation;
-var hasRequiredImplementation;
+var implementation_browser = {exports: {}};
 
-function requireImplementation () {
-	if (hasRequiredImplementation) return implementation;
-	hasRequiredImplementation = 1;
+/* eslint no-negated-condition: 0, no-new-func: 0 */
 
-	implementation = commonjsGlobal;
-	return implementation;
+var hasRequiredImplementation_browser;
+
+function requireImplementation_browser () {
+	if (hasRequiredImplementation_browser) return implementation_browser.exports;
+	hasRequiredImplementation_browser = 1;
+
+	if (typeof self !== 'undefined') {
+		implementation_browser.exports = self;
+	} else if (typeof window !== 'undefined') {
+		implementation_browser.exports = window;
+	} else {
+		implementation_browser.exports = Function('return this')();
+	}
+	return implementation_browser.exports;
 }
 
 var polyfill;
@@ -2090,7 +2023,7 @@ function requirePolyfill () {
 	if (hasRequiredPolyfill) return polyfill;
 	hasRequiredPolyfill = 1;
 
-	var implementation = requireImplementation();
+	var implementation = requireImplementation_browser();
 
 	polyfill = function getPolyfill() {
 		if (typeof commonjsGlobal !== 'object' || !commonjsGlobal || commonjsGlobal.Math !== Math || commonjsGlobal.Array !== Array) {
@@ -2147,7 +2080,7 @@ function requireGlobalthis () {
 
 	var defineProperties = requireDefineProperties();
 
-	var implementation = requireImplementation();
+	var implementation = requireImplementation_browser();
 	var getPolyfill = requirePolyfill();
 	var shim = requireShim();
 
@@ -2169,52 +2102,232 @@ var Liqe = {};
 
 var errors = {};
 
-class ExtendableError extends Error {
-  constructor(...params) {
-    super(...params);
-    var message =
-      params.length > 0 && typeof params[0] === "string" ? params[0] : "";
+var cjs = {};
 
-    // Replace Error with ClassName of the constructor, if it has not been overwritten already
-    if (this.name === undefined || this.name === "Error") {
-      Object.defineProperty(this, "name", {
-        configurable: true,
-        enumerable: false,
-        value: this.constructor.name,
-        writable: true,
-      });
-    }
+var helpers = {};
 
-    Object.defineProperty(this, "message", {
-      configurable: true,
-      enumerable: false,
-      value: message,
-      writable: true,
-    });
+var hasRequiredHelpers;
 
-    Object.defineProperty(this, "stack", {
-      configurable: true,
-      enumerable: false,
-      value: "",
-      writable: true,
-    });
+function requireHelpers () {
+	if (hasRequiredHelpers) return helpers;
+	hasRequiredHelpers = 1;
+	helpers.__esModule = undefined;
+	helpers.__esModule = true;
 
-    // Maintains proper stack trace for where our error was thrown (only available on V8)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
-    } else if (this.stack === "") {
-      this.stack = new Error(message).stack;
-    }
-  }
+	// Misc helpers
+
+	var objectSetPrototypeOfIsDefined = typeof Object.setPrototypeOf === "function";
+	var objectGetPrototypeOfIsDefined = typeof Object.getPrototypeOf === "function";
+	var objectDefinePropertyIsDefined = typeof Object.defineProperty === "function";
+	var objectCreateIsDefined = typeof Object.create === "function";
+	var objectHasOwnPropertyIsDefined =
+	  typeof Object.prototype.hasOwnProperty === "function";
+
+	var setPrototypeOf = function setPrototypeOf(target, prototype) {
+	  if (objectSetPrototypeOfIsDefined) {
+	    Object.setPrototypeOf(target, prototype);
+	  } else {
+	    target.__proto__ = prototype;
+	  }
+	};
+	helpers.setPrototypeOf = setPrototypeOf;
+
+	var getPrototypeOf = function getPrototypeOf(target) {
+	  if (objectGetPrototypeOfIsDefined) {
+	    return Object.getPrototypeOf(target);
+	  } else {
+	    return target.__proto__ || target.prototype;
+	  }
+	};
+	helpers.getPrototypeOf = getPrototypeOf;
+
+	// Object.defineProperty exists in IE8, but the implementation is buggy, so we
+	// need to test if the call fails, and, if so, set a flag to use the shim, as if
+	// the function were not defined. When this error is caught the first time, the
+	// function is called again recursively, after the flag is set, so the desired
+	// effect is achieved anyway.
+	var ie8ObjectDefinePropertyBug = false;
+	var defineProperty = function defineProperty(target, name, propertyDescriptor) {
+	  if (objectDefinePropertyIsDefined && !ie8ObjectDefinePropertyBug) {
+	    try {
+	      Object.defineProperty(target, name, propertyDescriptor);
+	    } catch (e) {
+	      ie8ObjectDefinePropertyBug = true;
+	      defineProperty(target, name, propertyDescriptor);
+	    }
+	  } else {
+	    target[name] = propertyDescriptor.value;
+	  }
+	};
+	helpers.defineProperty = defineProperty;
+
+	var hasOwnProperty = function hasOwnProperty(target, name) {
+	  if (objectHasOwnPropertyIsDefined) {
+	    return target.hasOwnProperty(target, name);
+	  } else {
+	    return target[name] === undefined;
+	  }
+	};
+	helpers.hasOwnProperty = hasOwnProperty;
+
+	var objectCreate = function objectCreate(prototype, propertyDescriptors) {
+	  if (objectCreateIsDefined) {
+	    return Object.create(prototype, propertyDescriptors);
+	  } else {
+	    var F = function F() {};
+	    F.prototype = prototype;
+	    var result = new F();
+	    if (typeof propertyDescriptors === "undefined") {
+	      return result;
+	    }
+	    if (typeof propertyDescriptors === "null") {
+	      throw new Error("PropertyDescriptors must not be null.");
+	    }
+	    if (typeof propertyDescriptors === "object") {
+	      for (var key in propertyDescriptors) {
+	        if (hasOwnProperty(propertyDescriptors, key)) {
+	          result[key] = propertyDescriptors[key].value;
+	        }
+	      }
+	    }
+
+	    return result;
+	  }
+	};
+	helpers.objectCreate = objectCreate;
+	return helpers;
 }
 
-var es = /*#__PURE__*/Object.freeze({
-	__proto__: null,
-	ExtendableError: ExtendableError,
-	default: ExtendableError
-});
+var hasRequiredCjs;
 
-var require$$0 = /*@__PURE__*/getAugmentedNamespace(es);
+function requireCjs () {
+	if (hasRequiredCjs) return cjs;
+	hasRequiredCjs = 1;
+	(function (exports) {
+		exports.__esModule = undefined;
+		exports.__esModule = true;
+
+		var helpers = requireHelpers();
+		var setPrototypeOf = helpers.setPrototypeOf;
+		var getPrototypeOf = helpers.getPrototypeOf;
+		var defineProperty = helpers.defineProperty;
+		var objectCreate = helpers.objectCreate;
+
+		// Small test for IE6-8, which checks if the environment prints errors "nicely"
+		// If not, a toString() method to be added to the error objects with formatting
+		// like in more modern browsers
+		var uglyErrorPrinting = new Error().toString() === "[object Error]";
+
+		// For compatibility
+		var extendableErrorName = "";
+
+		function ExtendableError(message) {
+		  // Get the constructor
+		  var originalConstructor = this.constructor;
+		  // Get the constructor name from the non-standard name property. If undefined
+		  // (on old IEs), it uses the string representation of the function to extract
+		  // the name. This should work in all cases, except for directly instantiated
+		  // ExtendableError objects, for which the name of the ExtendableError class /
+		  // function is used
+		  var constructorName =
+		    originalConstructor.name ||
+		    (function () {
+		      var constructorNameMatch = originalConstructor
+		        .toString()
+		        .match(/^function\s*([^\s(]+)/);
+		      return constructorNameMatch === null
+		        ? extendableErrorName
+		          ? extendableErrorName
+		          : "Error"
+		        : constructorNameMatch[1];
+		    })();
+		  // If the constructor name is "Error", ...
+		  var constructorNameIsError = constructorName === "Error";
+		  // change it to the name of the ExtendableError class / function
+		  var name = constructorNameIsError ? extendableErrorName : constructorName;
+
+		  // Obtain a new Error instance. This also sets the message property already.
+		  var instance = Error.apply(this, arguments);
+
+		  // Set the prototype of this to the prototype of instance
+		  setPrototypeOf(instance, getPrototypeOf(this));
+
+		  // On old IEs, the instance will not extend our subclasses this way. The fix is to use this from the function call instead.
+		  if (
+		    !(instance instanceof originalConstructor) ||
+		    !(instance instanceof ExtendableError)
+		  ) {
+		    var instance = this;
+		    Error.apply(this, arguments);
+		    defineProperty(instance, "message", {
+		      configurable: true,
+		      enumerable: false,
+		      value: message,
+		      writable: true,
+		    });
+		  }
+
+		  // define the name property
+		  defineProperty(instance, "name", {
+		    configurable: true,
+		    enumerable: false,
+		    value: name,
+		    writable: true,
+		  });
+
+		  // Use Error.captureStackTrace on V8 to capture the proper stack trace excluding any of our error classes
+		  if (Error.captureStackTrace) {
+		    // prettier-ignore
+		    Error.captureStackTrace(
+		      instance,
+		      constructorNameIsError ? ExtendableError : originalConstructor
+		    );
+		  }
+		  // instance.stack can still be undefined, in which case the best solution is to create a new Error object and get it from there
+		  if (instance.stack === undefined) {
+		    var err = new Error(message);
+		    err.name = instance.name;
+		    instance.stack = err.stack;
+		  }
+
+		  // If the environment does not have a proper string representation (IE), provide an alternative toString()
+		  if (uglyErrorPrinting) {
+		    defineProperty(instance, "toString", {
+		      configurable: true,
+		      enumerable: false,
+		      value: function toString() {
+		        return (
+		          (this.name || "Error") +
+		          (typeof this.message === "undefined" ? "" : ": " + this.message)
+		        );
+		      },
+		      writable: true,
+		    });
+		  }
+
+		  // We're done!
+		  return instance;
+		}
+
+		// Get the name of the ExtendableError function or use the string literal
+		extendableErrorName = ExtendableError.name || "ExtendableError";
+
+		// Set the prototype of ExtendableError to an Error object
+		ExtendableError.prototype = objectCreate(Error.prototype, {
+		  constructor: {
+		    value: Error,
+		    enumerable: false,
+		    writable: true,
+		    configurable: true,
+		  },
+		});
+
+		// Export
+		exports.ExtendableError = ExtendableError;
+		exports["default"] = exports.ExtendableError; 
+	} (cjs));
+	return cjs;
+}
 
 var hasRequiredErrors;
 
@@ -2223,7 +2336,7 @@ function requireErrors () {
 	hasRequiredErrors = 1;
 	Object.defineProperty(errors, "__esModule", { value: true });
 	errors.SyntaxError = errors.LiqeError = void 0;
-	const ts_error_1 = require$$0;
+	const ts_error_1 = requireCjs();
 	class LiqeError extends ts_error_1.ExtendableError {
 	}
 	errors.LiqeError = LiqeError;
@@ -4329,7 +4442,7 @@ function requireCreateLogWriter () {
 	var boolean_1 = requireLib();
 	var globalthis_1 = __importDefault(requireGlobalthis());
 	var liqe_1 = requireLiqe();
-	var roarr_1 = requireRoarr();
+	var roarr_1 = requireBrowser();
 	var globalThis = (0, globalthis_1.default)();
 	var logLevelColors = {
 	    debug: {
@@ -4469,143 +4582,62 @@ const createId = (length = 8) => {
 
 class Dependencies {
     constructor() {
-        this.log = RoarrExports.Roarr;
+        this.log = browserExports.Roarr;
         this.createId = createId;
     }
 }
 
 const dependencyInjection = new Dependencies();
 
-/**
- * Represents an encounter
- * @author Ferdinand Engländer
- */
+var R=Symbol.for("immer-nothing"),z=Symbol.for("immer-draftable"),u=Symbol.for("immer-state");function h(e,...t){throw new Error(`[Immer] minified error nr: ${e}. Full error at: https://bit.ly/3cXEKWf`)}var N=Object.getPrototypeOf;function O(e){return !!e&&!!e[u]}function I(e){return e?ue(e)||Array.isArray(e)||!!e[z]||!!e.constructor?.[z]||v(e)||k(e):false}var me=Object.prototype.constructor.toString();function ue(e){if(!e||typeof e!="object")return  false;let t=N(e);if(t===null)return  true;let r=Object.hasOwnProperty.call(t,"constructor")&&t.constructor;return r===Object?true:typeof r=="function"&&Function.toString.call(r)===me}function _(e,t){j(e)===0?Reflect.ownKeys(e).forEach(r=>{t(r,e[r],e);}):e.forEach((r,n)=>t(n,r,e));}function j(e){let t=e[u];return t?t.o:Array.isArray(e)?1:v(e)?2:k(e)?3:0}function C(e,t){return j(e)===2?e.has(t):Object.prototype.hasOwnProperty.call(e,t)}function X(e,t,r){let n=j(e);n===2?e.set(t,r):n===3?e.add(r):e[t]=r;}function ye(e,t){return e===t?e!==0||1/e===1/t:e!==e&&t!==t}function v(e){return e instanceof Map}function k(e){return e instanceof Set}function T(e){return e.e||e.t}function L(e,t){if(v(e))return new Map(e);if(k(e))return new Set(e);if(Array.isArray(e))return Array.prototype.slice.call(e);let r=ue(e);if(t===true||t==="class_only"&&!r){let n=Object.getOwnPropertyDescriptors(e);delete n[u];let i=Reflect.ownKeys(n);for(let f=0;f<i.length;f++){let l=i[f],c=n[l];c.writable===false&&(c.writable=true,c.configurable=true),(c.get||c.set)&&(n[l]={configurable:true,writable:true,enumerable:c.enumerable,value:e[l]});}return Object.create(N(e),n)}else {let n=N(e);if(n!==null&&r)return {...e};let i=Object.create(n);return Object.assign(i,e)}}function H(e,t=false){return $(e)||O(e)||!I(e)||(j(e)>1&&(e.set=e.add=e.clear=e.delete=Pe),Object.freeze(e),t&&Object.entries(e).forEach(([r,n])=>H(n,true))),e}function Pe(){h(2);}function $(e){return Object.isFrozen(e)}var re={};function w(e){let t=re[e];return t||h(0,e),t}var U;function K(){return U}function xe(e,t){return {a:[],i:e,p:t,P:true,d:0}}function ne(e,t){t&&(w("Patches"),e.f=[],e.h=[],e.b=t);}function V(e){Y(e),e.a.forEach(ge),e.a=null;}function Y(e){e===U&&(U=e.i);}function ae(e){return U=xe(U,e)}function ge(e){let t=e[u];t.o===0||t.o===1?t.x():t.m=true;}function oe(e,t){t.d=t.a.length;let r=t.a[0];return e!==void 0&&e!==r?(r[u].s&&(V(t),h(4)),I(e)&&(e=Z(t,e),t.i||ee(t,e)),t.f&&w("Patches").T(r[u].t,e,t.f,t.h)):e=Z(t,r,[]),V(t),t.f&&t.b(t.f,t.h),e!==R?e:void 0}function Z(e,t,r){if($(t))return t;let n=t[u];if(!n)return _(t,(i,f)=>le(e,n,t,i,f,r)),t;if(n.n!==e)return t;if(!n.s)return ee(e,n.t,true),n.t;if(!n.c){n.c=true,n.n.d--;let i=n.e,f=i,l=false;n.o===3&&(f=new Set(i),i.clear(),l=true),_(f,(c,b)=>le(e,n,i,c,b,r,l)),ee(e,i,false),r&&e.f&&w("Patches").g(n,r,e.f,e.h);}return n.e}function le(e,t,r,n,i,f,l){if(O(i)){let c=f&&t&&t.o!==3&&!C(t.r,n)?f.concat(n):void 0,b=Z(e,i,c);if(X(r,n,b),O(b))e.P=false;else return}else l&&r.add(i);if(I(i)&&!$(i)){if(!e.p.y&&e.d<1)return;Z(e,i),(!t||!t.n.i)&&typeof n!="symbol"&&Object.prototype.propertyIsEnumerable.call(r,n)&&ee(e,i);}}function ee(e,t,r=false){!e.i&&e.p.y&&e.P&&H(t,r);}function pe(e,t){let r=Array.isArray(e),n={o:r?1:0,n:t?t.n:K(),s:false,c:false,r:{},i:t,t:e,u:null,e:null,x:null,l:false},i=n,f=ce;r&&(i=[n],f=q);let{revoke:l,proxy:c}=Proxy.revocable(i,f);return n.u=c,n.x=l,c}var ce={get(e,t){if(t===u)return e;let r=T(e);if(!C(r,t))return be(e,r,t);let n=r[t];return e.c||!I(n)?n:n===ie(e.t,t)?(se(e),e.e[t]=B(n,e)):n},has(e,t){return t in T(e)},ownKeys(e){return Reflect.ownKeys(T(e))},set(e,t,r){let n=de(T(e),t);if(n?.set)return n.set.call(e.u,r),true;if(!e.s){let i=ie(T(e),t),f=i?.[u];if(f&&f.t===r)return e.e[t]=r,e.r[t]=false,true;if(ye(r,i)&&(r!==void 0||C(e.t,t)))return  true;se(e),E(e);}return e.e[t]===r&&(r!==void 0||t in e.e)||Number.isNaN(r)&&Number.isNaN(e.e[t])||(e.e[t]=r,e.r[t]=true),true},deleteProperty(e,t){return ie(e.t,t)!==void 0||t in e.t?(e.r[t]=false,se(e),E(e)):delete e.r[t],e.e&&delete e.e[t],true},getOwnPropertyDescriptor(e,t){let r=T(e),n=Reflect.getOwnPropertyDescriptor(r,t);return n&&{writable:true,configurable:e.o!==1||t!=="length",enumerable:n.enumerable,value:r[t]}},defineProperty(){h(11);},getPrototypeOf(e){return N(e.t)},setPrototypeOf(){h(12);}},q={};_(ce,(e,t)=>{q[e]=function(){return arguments[0]=arguments[0][0],t.apply(this,arguments)};});q.deleteProperty=function(e,t){return q.set.call(this,e,t,void 0)};q.set=function(e,t,r){return ce.set.call(this,e[0],t,r,e[0])};function ie(e,t){let r=e[u];return (r?T(r):e)[t]}function be(e,t,r){let n=de(t,r);return n?"value"in n?n.value:n.get?.call(e.u):void 0}function de(e,t){if(!(t in e))return;let r=N(e);for(;r;){let n=Object.getOwnPropertyDescriptor(r,t);if(n)return n;r=N(r);}}function E(e){e.s||(e.s=true,e.i&&E(e.i));}function se(e){e.e||(e.e=L(e.t,e.n.p.S));}var te=class{constructor(t){this.y=true;this.S=false;this.produce=(t,r,n)=>{if(typeof t=="function"&&typeof r!="function"){let f=r;r=t;let l=this;return function(b=f,...a){return l.produce(b,o=>r.call(this,o,...a))}}typeof r!="function"&&h(6),n!==void 0&&typeof n!="function"&&h(7);let i;if(I(t)){let f=ae(this),l=B(t,void 0),c=true;try{i=r(l),c=!1;}finally{c?V(f):Y(f);}return ne(f,n),oe(i,f)}else if(!t||typeof t!="object"){if(i=r(t),i===void 0&&(i=t),i===R&&(i=void 0),this.y&&H(i,true),n){let f=[],l=[];w("Patches").T(t,i,f,l),n(f,l);}return i}else h(1,t);};this.produceWithPatches=(t,r)=>{if(typeof t=="function")return (l,...c)=>this.produceWithPatches(l,b=>t(b,...c));let n,i;return [this.produce(t,r,(l,c)=>{n=l,i=c;}),n,i]};typeof t?.autoFreeze=="boolean"&&this.setAutoFreeze(t.autoFreeze),typeof t?.useStrictShallowCopy=="boolean"&&this.setUseStrictShallowCopy(t.useStrictShallowCopy);}createDraft(t){I(t)||h(8),O(t)&&(t=fe(t));let r=ae(this),n=B(t,void 0);return n[u].l=true,Y(r),n}finishDraft(t,r){let n=t&&t[u];(!n||!n.l)&&h(9);let{n:i}=n;return ne(i,r),oe(void 0,i)}setAutoFreeze(t){this.y=t;}setUseStrictShallowCopy(t){this.S=t;}applyPatches(t,r){let n;for(n=r.length-1;n>=0;n--){let f=r[n];if(f.path.length===0&&f.op==="replace"){t=f.value;break}}n>-1&&(r=r.slice(n+1));let i=w("Patches").A;return O(t)?i(t,r):this.produce(t,f=>i(f,r))}};function B(e,t){let r=v(e)?w("MapSet").I(e,t):k(e)?w("MapSet").D(e,t):pe(e,t);return (t?t.n:K()).a.push(r),r}function fe(e){return O(e)||h(10,e),he(e)}function he(e){if(!I(e)||$(e))return e;let t=e[u],r;if(t){if(!t.s)return t.t;t.c=true,r=L(e,t.n.p.S);}else r=L(e,true);return _(r,(n,i)=>{X(r,n,he(i));}),t&&(t.c=false),r}var M=new te,qt=M.produce;M.produceWithPatches.bind(M);M.setAutoFreeze.bind(M);M.setUseStrictShallowCopy.bind(M);M.applyPatches.bind(M);M.createDraft.bind(M);M.finishDraft.bind(M);
 
-class Encounter {
-    /**
-     * @type {string} Name of the encounter.
-     */
-    name;
+class EncounterElement {
+    [z] = true;
 
     /**
-     * @type {ContentBlock[]} Global content blocks associated with the encounter.
-     */
-    globalContentBlocks;
-
-    /**
-     * @type {EncounterElement[]} Array of encounter elements (e.g., creatures, PCs, NPCs, lair actions).
-     */
-    encounterElements;
-
-    /**
-     * @type {EncounterElement[]} Array of encounter elements (e.g., creatures, PCs, NPCs, lair actions).
-     */
-    encounterElementsOutOfInitiative;
-
-    /**
-     * @type {string[]} Initiative order resolved from initiative values and tie-breakers.
-     */
-    _initiativeOrder;
-
-    /**
-     * @type {Object.<string, number>} Rolled initiative values mapped to the IDs of encounter elements.
-     */
-    initiativeValues;
-
-    /**
-     * @type {Object.<number, string[]>} Tie-breakers for initiative values, mapping tied values to arrays of element IDs.
-     */
-    initiativeTieBreakers;
-
-    /**
-     * @type {number} Current round of the encounter.
-     */
-    currentRound;
-
-    /**
-     * @type {number} Index of the currently active encounter element in the initiative order.
-     */
-    currentTurn;
-
-    /**
-     * @type {StatusEffect[]}
-     */
-    activeStatusEffects;
-
-    /**
-     * @type {Dependencies}
-     */
-    _dependencies;
-
-    /**
-     * @param {Object} options Options for initializing the encounter.
-     * @param {string} options.name Name of the encounter.
-     * @param {string} options.id
-     * @param {ContentBlock[]} options.globalContentBlocks Global content blocks associated with the encounter.
-     * @param {EncounterElement[]} options.encounterElements Array of encounter elements (e.g., creatures, NPCs).
-     * @param {EncounterElement[]} options.encounterElementsOutOfInitiative Array of encounter elements (e.g., creatures, NPCs).
-     * @param {Object.<string, number>} [options.initiativeValues] Rolled initiative values mapped to the IDs of encounter elements.
-     * @param {Object.<number, string[]>} [options.initiativeTieBreakers] Tie-breakers for initiative values.
-     * @param {number} [options.currentRound=1] Current round of the encounter.
-     * @param {number} [options.currentTurn=0] Index of the currently active encounter element in the initiative order.
-     * @param {StatusEffect[]} activeStatusEffects
+     *
+     * @param {string} name
+     * @param {string} id
      * @param {Dependencies} dependencies
+     * @param {string} type
      */
     constructor({
                     name,
                     id = "",
-                    globalContentBlocks = [],
-                    encounterElements = [],
-                    encounterElementsOutOfInitiative = [],
-                    initiativeValues = {},
-                    initiativeTieBreakers = {},
-                    currentRound = 1,
-                    currentTurn = 0,
-                    activeStatusEffects = [],
                     dependencies = dependencyInjection,
-                }) {
+                    type = "EncounterElement",
+    }) {
         this._dependencies = dependencies;
-        this.name = name;
-        this.id = id;
-        if (this.id === "") {
-            this.id = this._dependencies.createId();
+        if (id === "") {
+            id = this._dependencies.createId();
         }
-        this.globalContentBlocks = globalContentBlocks;
-        this.encounterElements = encounterElements;
-        this.encounterElementsOutOfInitiative = encounterElementsOutOfInitiative;
-        this._initiativeOrder = [];
-        this.initiativeValues = initiativeValues;
-        this.initiativeTieBreakers = initiativeTieBreakers;
-        this.currentRound = currentRound;
-        this.currentTurn = currentTurn;
-        this.activeStatusEffects = activeStatusEffects;
-
-        this._dependencies.log.info(this, "Initialized a new Encounter");
+        this.id = id;
+        this.name = name;
+        this.type = type;
     }
 
-    /**
-     *
-     * @param {string[]} initiativeOrder
-     */
-    set initiativeOrder(initiativeOrder) {
-        this._initiativeOrder = initiativeOrder;
+    _withUpdate(updates) {
+        return qt(this, draft => {
+            Object.assign(draft, updates);
+        })
     }
 
-
-    /**
-     * Gets the encounter objects in initiative order.
-     * @returns {EncounterElement[]} Array of encounter objects in initiative order.
-     */
-    getInitiativeObjects() {
-        return this._initiativeOrder.map((id) => {
-            const element = this.encounterElements.find((el) => el.id === id);
-            if (!element) {
-                throw new Error(`EncounterElement with ID "${id}" not found`);
-            }
-            return element;
-        });
+    withName(newName) {
+        return this._withUpdate({name: newName})
     }
 }
 
-new Encounter({name: "hello"});
+window.process = {
+    env: {
+        NODE_ENV: "production"
+    }
+};
+
+let firstEncounterElement = new EncounterElement({name: "A first name"});
+console.log(firstEncounterElement);
+firstEncounterElement.withName("Gnurx Goblin");
+console.log(firstEncounterElement);
+firstEncounterElement = firstEncounterElement.withName("Sarah Secondtry");
+console.log(firstEncounterElement);
+firstEncounterElement.name = "Change";
 //# sourceMappingURL=app.esm.js.map

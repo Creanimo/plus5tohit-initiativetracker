@@ -1,3 +1,15 @@
-import { Encounter } from "./modules.js";
+import { EncounterElement } from "./modules.js";
 
-const myEncounter = new Encounter({name: "hello"});
+window.process = {
+    env: {
+        NODE_ENV: "production"
+    }
+};
+
+let firstEncounterElement = new EncounterElement({name: "A first name"});
+console.log(firstEncounterElement);
+firstEncounterElement.withName("Gnurx Goblin");
+console.log(firstEncounterElement);
+firstEncounterElement = firstEncounterElement.withName("Sarah Secondtry");
+console.log(firstEncounterElement);
+firstEncounterElement.name = "Change";
