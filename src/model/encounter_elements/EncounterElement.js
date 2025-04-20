@@ -1,11 +1,12 @@
 import { immerable, produce } from "../../../node_modules/immer/dist/immer.production.mjs";
 import { dependencyInjection } from "../../tools/commonDependencies.js";
 
+"use strict";
+
 /**
  * @typedef {"creature"|"event"|"legendaryCreature"|"generic"} EncounterElementTypes
  */
 
-"use strict";
 class EncounterElement {
     [immerable] = true;
 
