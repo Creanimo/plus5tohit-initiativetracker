@@ -1,5 +1,5 @@
-import { immmerable, produce } from "../../../node_modules/immer/dist/immer.production.mjs";
-import { Dependencies } from "../../tools/commonDependencies.js";
+import { immerable, produce } from "../../../node_modules/immer/dist/immer.production.mjs";
+import { dependencyInjection } from "../../tools/commonDependencies.js";
 
 'use strict';
 
@@ -8,7 +8,7 @@ import { Dependencies } from "../../tools/commonDependencies.js";
  */
 
 class ContentBlock {
-    [immmerable] = true;
+    [immerable] = true;
 
     /**
      * @type {string}

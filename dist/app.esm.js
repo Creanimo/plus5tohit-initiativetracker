@@ -1,3 +1,5 @@
+var R=Symbol.for("immer-nothing"),z=Symbol.for("immer-draftable"),u=Symbol.for("immer-state");function h(e,...t){throw new Error(`[Immer] minified error nr: ${e}. Full error at: https://bit.ly/3cXEKWf`)}var N=Object.getPrototypeOf;function O(e){return !!e&&!!e[u]}function I(e){return e?ue(e)||Array.isArray(e)||!!e[z]||!!e.constructor?.[z]||v(e)||k(e):false}var me=Object.prototype.constructor.toString();function ue(e){if(!e||typeof e!="object")return  false;let t=N(e);if(t===null)return  true;let r=Object.hasOwnProperty.call(t,"constructor")&&t.constructor;return r===Object?true:typeof r=="function"&&Function.toString.call(r)===me}function _(e,t){j(e)===0?Reflect.ownKeys(e).forEach(r=>{t(r,e[r],e);}):e.forEach((r,n)=>t(n,r,e));}function j(e){let t=e[u];return t?t.o:Array.isArray(e)?1:v(e)?2:k(e)?3:0}function C(e,t){return j(e)===2?e.has(t):Object.prototype.hasOwnProperty.call(e,t)}function X(e,t,r){let n=j(e);n===2?e.set(t,r):n===3?e.add(r):e[t]=r;}function ye(e,t){return e===t?e!==0||1/e===1/t:e!==e&&t!==t}function v(e){return e instanceof Map}function k(e){return e instanceof Set}function T(e){return e.e||e.t}function L(e,t){if(v(e))return new Map(e);if(k(e))return new Set(e);if(Array.isArray(e))return Array.prototype.slice.call(e);let r=ue(e);if(t===true||t==="class_only"&&!r){let n=Object.getOwnPropertyDescriptors(e);delete n[u];let i=Reflect.ownKeys(n);for(let f=0;f<i.length;f++){let l=i[f],c=n[l];c.writable===false&&(c.writable=true,c.configurable=true),(c.get||c.set)&&(n[l]={configurable:true,writable:true,enumerable:c.enumerable,value:e[l]});}return Object.create(N(e),n)}else {let n=N(e);if(n!==null&&r)return {...e};let i=Object.create(n);return Object.assign(i,e)}}function H(e,t=false){return $(e)||O(e)||!I(e)||(j(e)>1&&(e.set=e.add=e.clear=e.delete=Pe),Object.freeze(e),t&&Object.entries(e).forEach(([r,n])=>H(n,true))),e}function Pe(){h(2);}function $(e){return Object.isFrozen(e)}var re={};function w(e){let t=re[e];return t||h(0,e),t}var U;function K(){return U}function xe(e,t){return {a:[],i:e,p:t,P:true,d:0}}function ne(e,t){t&&(w("Patches"),e.f=[],e.h=[],e.b=t);}function V(e){Y(e),e.a.forEach(ge),e.a=null;}function Y(e){e===U&&(U=e.i);}function ae(e){return U=xe(U,e)}function ge(e){let t=e[u];t.o===0||t.o===1?t.x():t.m=true;}function oe(e,t){t.d=t.a.length;let r=t.a[0];return e!==void 0&&e!==r?(r[u].s&&(V(t),h(4)),I(e)&&(e=Z(t,e),t.i||ee(t,e)),t.f&&w("Patches").T(r[u].t,e,t.f,t.h)):e=Z(t,r,[]),V(t),t.f&&t.b(t.f,t.h),e!==R?e:void 0}function Z(e,t,r){if($(t))return t;let n=t[u];if(!n)return _(t,(i,f)=>le(e,n,t,i,f,r)),t;if(n.n!==e)return t;if(!n.s)return ee(e,n.t,true),n.t;if(!n.c){n.c=true,n.n.d--;let i=n.e,f=i,l=false;n.o===3&&(f=new Set(i),i.clear(),l=true),_(f,(c,b)=>le(e,n,i,c,b,r,l)),ee(e,i,false),r&&e.f&&w("Patches").g(n,r,e.f,e.h);}return n.e}function le(e,t,r,n,i,f,l){if(O(i)){let c=f&&t&&t.o!==3&&!C(t.r,n)?f.concat(n):void 0,b=Z(e,i,c);if(X(r,n,b),O(b))e.P=false;else return}else l&&r.add(i);if(I(i)&&!$(i)){if(!e.p.y&&e.d<1)return;Z(e,i),(!t||!t.n.i)&&typeof n!="symbol"&&Object.prototype.propertyIsEnumerable.call(r,n)&&ee(e,i);}}function ee(e,t,r=false){!e.i&&e.p.y&&e.P&&H(t,r);}function pe(e,t){let r=Array.isArray(e),n={o:r?1:0,n:t?t.n:K(),s:false,c:false,r:{},i:t,t:e,u:null,e:null,x:null,l:false},i=n,f=ce;r&&(i=[n],f=q);let{revoke:l,proxy:c}=Proxy.revocable(i,f);return n.u=c,n.x=l,c}var ce={get(e,t){if(t===u)return e;let r=T(e);if(!C(r,t))return be(e,r,t);let n=r[t];return e.c||!I(n)?n:n===ie(e.t,t)?(se(e),e.e[t]=B(n,e)):n},has(e,t){return t in T(e)},ownKeys(e){return Reflect.ownKeys(T(e))},set(e,t,r){let n=de(T(e),t);if(n?.set)return n.set.call(e.u,r),true;if(!e.s){let i=ie(T(e),t),f=i?.[u];if(f&&f.t===r)return e.e[t]=r,e.r[t]=false,true;if(ye(r,i)&&(r!==void 0||C(e.t,t)))return  true;se(e),E(e);}return e.e[t]===r&&(r!==void 0||t in e.e)||Number.isNaN(r)&&Number.isNaN(e.e[t])||(e.e[t]=r,e.r[t]=true),true},deleteProperty(e,t){return ie(e.t,t)!==void 0||t in e.t?(e.r[t]=false,se(e),E(e)):delete e.r[t],e.e&&delete e.e[t],true},getOwnPropertyDescriptor(e,t){let r=T(e),n=Reflect.getOwnPropertyDescriptor(r,t);return n&&{writable:true,configurable:e.o!==1||t!=="length",enumerable:n.enumerable,value:r[t]}},defineProperty(){h(11);},getPrototypeOf(e){return N(e.t)},setPrototypeOf(){h(12);}},q={};_(ce,(e,t)=>{q[e]=function(){return arguments[0]=arguments[0][0],t.apply(this,arguments)};});q.deleteProperty=function(e,t){return q.set.call(this,e,t,void 0)};q.set=function(e,t,r){return ce.set.call(this,e[0],t,r,e[0])};function ie(e,t){let r=e[u];return (r?T(r):e)[t]}function be(e,t,r){let n=de(t,r);return n?"value"in n?n.value:n.get?.call(e.u):void 0}function de(e,t){if(!(t in e))return;let r=N(e);for(;r;){let n=Object.getOwnPropertyDescriptor(r,t);if(n)return n;r=N(r);}}function E(e){e.s||(e.s=true,e.i&&E(e.i));}function se(e){e.e||(e.e=L(e.t,e.n.p.S));}var te=class{constructor(t){this.y=true;this.S=false;this.produce=(t,r,n)=>{if(typeof t=="function"&&typeof r!="function"){let f=r;r=t;let l=this;return function(b=f,...a){return l.produce(b,o=>r.call(this,o,...a))}}typeof r!="function"&&h(6),n!==void 0&&typeof n!="function"&&h(7);let i;if(I(t)){let f=ae(this),l=B(t,void 0),c=true;try{i=r(l),c=!1;}finally{c?V(f):Y(f);}return ne(f,n),oe(i,f)}else if(!t||typeof t!="object"){if(i=r(t),i===void 0&&(i=t),i===R&&(i=void 0),this.y&&H(i,true),n){let f=[],l=[];w("Patches").T(t,i,f,l),n(f,l);}return i}else h(1,t);};this.produceWithPatches=(t,r)=>{if(typeof t=="function")return (l,...c)=>this.produceWithPatches(l,b=>t(b,...c));let n,i;return [this.produce(t,r,(l,c)=>{n=l,i=c;}),n,i]};typeof t?.autoFreeze=="boolean"&&this.setAutoFreeze(t.autoFreeze),typeof t?.useStrictShallowCopy=="boolean"&&this.setUseStrictShallowCopy(t.useStrictShallowCopy);}createDraft(t){I(t)||h(8),O(t)&&(t=fe(t));let r=ae(this),n=B(t,void 0);return n[u].l=true,Y(r),n}finishDraft(t,r){let n=t&&t[u];(!n||!n.l)&&h(9);let{n:i}=n;return ne(i,r),oe(void 0,i)}setAutoFreeze(t){this.y=t;}setUseStrictShallowCopy(t){this.S=t;}applyPatches(t,r){let n;for(n=r.length-1;n>=0;n--){let f=r[n];if(f.path.length===0&&f.op==="replace"){t=f.value;break}}n>-1&&(r=r.slice(n+1));let i=w("Patches").A;return O(t)?i(t,r):this.produce(t,f=>i(f,r))}};function B(e,t){let r=v(e)?w("MapSet").I(e,t):k(e)?w("MapSet").D(e,t):pe(e,t);return (t?t.n:K()).a.push(r),r}function fe(e){return O(e)||h(10,e),he(e)}function he(e){if(!I(e)||$(e))return e;let t=e[u],r;if(t){if(!t.s)return t.t;t.c=true,r=L(e,t.n.p.S);}else r=L(e,true);return _(r,(n,i)=>{X(r,n,he(i));}),t&&(t.c=false),r}var M=new te,qt=M.produce;M.produceWithPatches.bind(M);M.setAutoFreeze.bind(M);M.setUseStrictShallowCopy.bind(M);M.applyPatches.bind(M);M.createDraft.bind(M);M.finishDraft.bind(M);
+
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
 var browser = {};
@@ -4575,7 +4577,7 @@ globalThis.ROARR.write = distExports.createLogWriter();
 
 const createId = (length = 8) => {
   return [...crypto.getRandomValues(new Uint8Array(length))]
-    .map(byte => byte.toString(36).padStart(2, '0'))
+    .map(byte => byte.toString().padStart(2, '0'))
     .join('')
     .slice(0, length);
 };
@@ -4589,23 +4591,52 @@ class Dependencies {
 
 const dependencyInjection = new Dependencies();
 
-var R=Symbol.for("immer-nothing"),z=Symbol.for("immer-draftable"),u=Symbol.for("immer-state");function h(e,...t){throw new Error(`[Immer] minified error nr: ${e}. Full error at: https://bit.ly/3cXEKWf`)}var N=Object.getPrototypeOf;function O(e){return !!e&&!!e[u]}function I(e){return e?ue(e)||Array.isArray(e)||!!e[z]||!!e.constructor?.[z]||v(e)||k(e):false}var me=Object.prototype.constructor.toString();function ue(e){if(!e||typeof e!="object")return  false;let t=N(e);if(t===null)return  true;let r=Object.hasOwnProperty.call(t,"constructor")&&t.constructor;return r===Object?true:typeof r=="function"&&Function.toString.call(r)===me}function _(e,t){j(e)===0?Reflect.ownKeys(e).forEach(r=>{t(r,e[r],e);}):e.forEach((r,n)=>t(n,r,e));}function j(e){let t=e[u];return t?t.o:Array.isArray(e)?1:v(e)?2:k(e)?3:0}function C(e,t){return j(e)===2?e.has(t):Object.prototype.hasOwnProperty.call(e,t)}function X(e,t,r){let n=j(e);n===2?e.set(t,r):n===3?e.add(r):e[t]=r;}function ye(e,t){return e===t?e!==0||1/e===1/t:e!==e&&t!==t}function v(e){return e instanceof Map}function k(e){return e instanceof Set}function T(e){return e.e||e.t}function L(e,t){if(v(e))return new Map(e);if(k(e))return new Set(e);if(Array.isArray(e))return Array.prototype.slice.call(e);let r=ue(e);if(t===true||t==="class_only"&&!r){let n=Object.getOwnPropertyDescriptors(e);delete n[u];let i=Reflect.ownKeys(n);for(let f=0;f<i.length;f++){let l=i[f],c=n[l];c.writable===false&&(c.writable=true,c.configurable=true),(c.get||c.set)&&(n[l]={configurable:true,writable:true,enumerable:c.enumerable,value:e[l]});}return Object.create(N(e),n)}else {let n=N(e);if(n!==null&&r)return {...e};let i=Object.create(n);return Object.assign(i,e)}}function H(e,t=false){return $(e)||O(e)||!I(e)||(j(e)>1&&(e.set=e.add=e.clear=e.delete=Pe),Object.freeze(e),t&&Object.entries(e).forEach(([r,n])=>H(n,true))),e}function Pe(){h(2);}function $(e){return Object.isFrozen(e)}var re={};function w(e){let t=re[e];return t||h(0,e),t}var U;function K(){return U}function xe(e,t){return {a:[],i:e,p:t,P:true,d:0}}function ne(e,t){t&&(w("Patches"),e.f=[],e.h=[],e.b=t);}function V(e){Y(e),e.a.forEach(ge),e.a=null;}function Y(e){e===U&&(U=e.i);}function ae(e){return U=xe(U,e)}function ge(e){let t=e[u];t.o===0||t.o===1?t.x():t.m=true;}function oe(e,t){t.d=t.a.length;let r=t.a[0];return e!==void 0&&e!==r?(r[u].s&&(V(t),h(4)),I(e)&&(e=Z(t,e),t.i||ee(t,e)),t.f&&w("Patches").T(r[u].t,e,t.f,t.h)):e=Z(t,r,[]),V(t),t.f&&t.b(t.f,t.h),e!==R?e:void 0}function Z(e,t,r){if($(t))return t;let n=t[u];if(!n)return _(t,(i,f)=>le(e,n,t,i,f,r)),t;if(n.n!==e)return t;if(!n.s)return ee(e,n.t,true),n.t;if(!n.c){n.c=true,n.n.d--;let i=n.e,f=i,l=false;n.o===3&&(f=new Set(i),i.clear(),l=true),_(f,(c,b)=>le(e,n,i,c,b,r,l)),ee(e,i,false),r&&e.f&&w("Patches").g(n,r,e.f,e.h);}return n.e}function le(e,t,r,n,i,f,l){if(O(i)){let c=f&&t&&t.o!==3&&!C(t.r,n)?f.concat(n):void 0,b=Z(e,i,c);if(X(r,n,b),O(b))e.P=false;else return}else l&&r.add(i);if(I(i)&&!$(i)){if(!e.p.y&&e.d<1)return;Z(e,i),(!t||!t.n.i)&&typeof n!="symbol"&&Object.prototype.propertyIsEnumerable.call(r,n)&&ee(e,i);}}function ee(e,t,r=false){!e.i&&e.p.y&&e.P&&H(t,r);}function pe(e,t){let r=Array.isArray(e),n={o:r?1:0,n:t?t.n:K(),s:false,c:false,r:{},i:t,t:e,u:null,e:null,x:null,l:false},i=n,f=ce;r&&(i=[n],f=q);let{revoke:l,proxy:c}=Proxy.revocable(i,f);return n.u=c,n.x=l,c}var ce={get(e,t){if(t===u)return e;let r=T(e);if(!C(r,t))return be(e,r,t);let n=r[t];return e.c||!I(n)?n:n===ie(e.t,t)?(se(e),e.e[t]=B(n,e)):n},has(e,t){return t in T(e)},ownKeys(e){return Reflect.ownKeys(T(e))},set(e,t,r){let n=de(T(e),t);if(n?.set)return n.set.call(e.u,r),true;if(!e.s){let i=ie(T(e),t),f=i?.[u];if(f&&f.t===r)return e.e[t]=r,e.r[t]=false,true;if(ye(r,i)&&(r!==void 0||C(e.t,t)))return  true;se(e),E(e);}return e.e[t]===r&&(r!==void 0||t in e.e)||Number.isNaN(r)&&Number.isNaN(e.e[t])||(e.e[t]=r,e.r[t]=true),true},deleteProperty(e,t){return ie(e.t,t)!==void 0||t in e.t?(e.r[t]=false,se(e),E(e)):delete e.r[t],e.e&&delete e.e[t],true},getOwnPropertyDescriptor(e,t){let r=T(e),n=Reflect.getOwnPropertyDescriptor(r,t);return n&&{writable:true,configurable:e.o!==1||t!=="length",enumerable:n.enumerable,value:r[t]}},defineProperty(){h(11);},getPrototypeOf(e){return N(e.t)},setPrototypeOf(){h(12);}},q={};_(ce,(e,t)=>{q[e]=function(){return arguments[0]=arguments[0][0],t.apply(this,arguments)};});q.deleteProperty=function(e,t){return q.set.call(this,e,t,void 0)};q.set=function(e,t,r){return ce.set.call(this,e[0],t,r,e[0])};function ie(e,t){let r=e[u];return (r?T(r):e)[t]}function be(e,t,r){let n=de(t,r);return n?"value"in n?n.value:n.get?.call(e.u):void 0}function de(e,t){if(!(t in e))return;let r=N(e);for(;r;){let n=Object.getOwnPropertyDescriptor(r,t);if(n)return n;r=N(r);}}function E(e){e.s||(e.s=true,e.i&&E(e.i));}function se(e){e.e||(e.e=L(e.t,e.n.p.S));}var te=class{constructor(t){this.y=true;this.S=false;this.produce=(t,r,n)=>{if(typeof t=="function"&&typeof r!="function"){let f=r;r=t;let l=this;return function(b=f,...a){return l.produce(b,o=>r.call(this,o,...a))}}typeof r!="function"&&h(6),n!==void 0&&typeof n!="function"&&h(7);let i;if(I(t)){let f=ae(this),l=B(t,void 0),c=true;try{i=r(l),c=!1;}finally{c?V(f):Y(f);}return ne(f,n),oe(i,f)}else if(!t||typeof t!="object"){if(i=r(t),i===void 0&&(i=t),i===R&&(i=void 0),this.y&&H(i,true),n){let f=[],l=[];w("Patches").T(t,i,f,l),n(f,l);}return i}else h(1,t);};this.produceWithPatches=(t,r)=>{if(typeof t=="function")return (l,...c)=>this.produceWithPatches(l,b=>t(b,...c));let n,i;return [this.produce(t,r,(l,c)=>{n=l,i=c;}),n,i]};typeof t?.autoFreeze=="boolean"&&this.setAutoFreeze(t.autoFreeze),typeof t?.useStrictShallowCopy=="boolean"&&this.setUseStrictShallowCopy(t.useStrictShallowCopy);}createDraft(t){I(t)||h(8),O(t)&&(t=fe(t));let r=ae(this),n=B(t,void 0);return n[u].l=true,Y(r),n}finishDraft(t,r){let n=t&&t[u];(!n||!n.l)&&h(9);let{n:i}=n;return ne(i,r),oe(void 0,i)}setAutoFreeze(t){this.y=t;}setUseStrictShallowCopy(t){this.S=t;}applyPatches(t,r){let n;for(n=r.length-1;n>=0;n--){let f=r[n];if(f.path.length===0&&f.op==="replace"){t=f.value;break}}n>-1&&(r=r.slice(n+1));let i=w("Patches").A;return O(t)?i(t,r):this.produce(t,f=>i(f,r))}};function B(e,t){let r=v(e)?w("MapSet").I(e,t):k(e)?w("MapSet").D(e,t):pe(e,t);return (t?t.n:K()).a.push(r),r}function fe(e){return O(e)||h(10,e),he(e)}function he(e){if(!I(e)||$(e))return e;let t=e[u],r;if(t){if(!t.s)return t.t;t.c=true,r=L(e,t.n.p.S);}else r=L(e,true);return _(r,(n,i)=>{X(r,n,he(i));}),t&&(t.c=false),r}var M=new te,qt=M.produce;M.produceWithPatches.bind(M);M.setAutoFreeze.bind(M);M.setUseStrictShallowCopy.bind(M);M.applyPatches.bind(M);M.createDraft.bind(M);M.finishDraft.bind(M);
+/**
+ * @typedef {"creature"|"event"|"legendaryCreature"|"generic"} EncounterElementTypes
+ */
 
 class EncounterElement {
     [z] = true;
 
     /**
+     * @type {string}
+     */
+    name;
+
+    /**
+     * @type {string}
+     */
+    id;
+
+    /**
+     * @type {EncounterElementTypes}
+     */
+    type;
+
+    /**
+     * @type {ContentBlock[]}
+     */
+    contents;
+
+    /**
+     * @type {Dependencies}
+     */
+    _dependencies;
+
+    /**
      *
      * @param {string} name
      * @param {string} id
+     * @param {EncounterElementTypes} type
+     * @param {ContentBlock[]} content
      * @param {Dependencies} dependencies
-     * @param {string} type
      */
     constructor({
                     name,
                     id = "",
+                    type = "generic",
+                    contents = [],
                     dependencies = dependencyInjection,
-                    type = "EncounterElement",
     }) {
         this._dependencies = dependencies;
         if (id === "") {
@@ -4613,17 +4644,46 @@ class EncounterElement {
         }
         this.id = id;
         this.name = name;
+        this.contents = contents;
         this.type = type;
     }
 
+    /**
+     *
+     * @param {{}} updates
+     * @returns {EncounterElement}
+     * @private
+     */
     _withUpdate(updates) {
         return qt(this, draft => {
             Object.assign(draft, updates);
         })
     }
 
+    /**
+     *
+     * @param {string} newName
+     * @returns {EncounterElement}
+     */
     withName(newName) {
         return this._withUpdate({name: newName})
+    }
+
+    /**
+     * @param {string} id 
+     * @returns {EncounterElement} 
+     */
+    withId(id) {
+        return this._withUpdate({ id })
+    }
+
+    /**
+     *
+     * @param {ContentBlock[]} contents
+     * @returns {EncounterElement}
+     */
+    withContents(contents) {
+        return this._withUpdate({contents: contents})
     }
 }
 
