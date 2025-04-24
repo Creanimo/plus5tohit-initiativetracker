@@ -82,6 +82,14 @@ class EncounterElement {
     }
 
     /**
+     * @param {string} id 
+     * @returns {EncounterElement} 
+     */
+    withId(id) {
+        return this._withUpdate({ id })
+    }
+
+    /**
      *
      * @param {ContentBlock[]} contents
      * @returns {EncounterElement}
