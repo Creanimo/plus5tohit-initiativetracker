@@ -37,7 +37,12 @@ class Encounter {
     encounterElementsOutOfInitiative;
 
     /**
-     * @type {string[]} Ids of encounterElements in initiative order resolved from initiative values and tie-breakers.
+     * @type {EncounterElement|null}
+     */
+    activeEncounterElement;
+
+    /**
+     * @type {string[]} Ids of EncounterElements in initiative order resolved from initiative values and tie-breakers.
      */
     initiativeOrder;
 
@@ -95,7 +100,7 @@ class Encounter {
         initiativeValues = {},
         initiativeTieBreakers = {},
         initiativeOrder = null,
-        currentRound = 1,
+        currentRound = 0,
         currentTurn = 0,
         activeStatusEffects = [],
         dependencies = dependencyInjection,
@@ -118,6 +123,11 @@ class Encounter {
         }
         this.currentRound = currentRound;
         this.currentTurn = currentTurn;
+        if (this.currentTurn > 0) {
+            this.activeEncounterElement = this.getActiveEncounterElement();
+        } else {
+            this.activeEncounterElement = null;
+        }
         this.activeStatusEffects = activeStatusEffects;
 
         this._dependencies.log.info(this, "Initialized a new Encounter");
@@ -226,6 +236,71 @@ class Encounter {
         return this._withUpdate({ currentTurn });
     }
 
+    /** 
+     * @returns {Encounter}
+     */
+    withStartFirstRound() {
+        if (this.currentRound == 0 && this.currentTurn == 0 && this.initiativeOrder) {
+            return this.withAdvancedTurn().withCurrentRound(1);
+        }
+        return this;
+    }
+
+    /** 
+     * @returns {Encounter}
+     */
+    withAdvancedTurn() {
+        if (!this.initiativeOrder) return this;
+
+        const totalTurns = this.initiativeOrder.length;
+
+        return produce(this, draft => {
+            let newTurnNumber = draft.currentTurn + 1;
+            if (newTurnNumber <= totalTurns) {
+                draft.currentTurn = newTurnNumber;
+            } else {
+                draft.currentTurn = 1;
+                draft.currentRound += 1;
+            }
+        });
+    }
+
+
+    /** 
+     * @returns {Encounter}
+     */
+    withAddedRound() {
+        return this._withUpdate({ currentRound: this.currentRound + 1 })
+    }
+
+    /** 
+     * @returns {Encounter}
+     */
+    withSubstractedRound() {
+        let newRoundNumber = this.currentRound - 1;
+        if (newRoundNumber <= 0) { newRoundNumber = 1 };
+        return this._withUpdate({ currentRound: newRoundNumber })
+    }
+
+    /** 
+     * @returns {Encounter|null}
+     */
+    getActiveEncounterElement() {
+        if (!this.initiativeOrder || this.currentTurn === 0) return null;
+        const activeId = this.getActiveEncounterElementId();
+        if (!activeId) return null;
+        return this.encounterElements.find(el => el.id === activeId) || null;
+    }
+
+    /** 
+     * @returns {string|null}
+     */
+    getActiveEncounterElementId() {
+        if (!this.initiativeOrder || this.currentTurn === 0) return null;
+        return this.initiativeOrder[this.currentTurn - 1];
+    }
+
+
     /**
      * @param {StatusEffect[]} activeStatusEffects
      * @returns {Encounter}
@@ -317,14 +392,10 @@ class Encounter {
      * Gets the encounter objects in initiative order.
      * @returns {EncounterElement[]} Array of encounter objects in initiative order.
      */
-    getInitiativeObjects() {
-        return this.initiativeOrder.map((id) => {
-            const element = this.encounterElements.find((el) => el.id === id);
-            if (!element) {
-                throw new Error(`EncounterElement with ID "${id}" not found`);
-            }
-            return element;
-        });
+    getEncounterElementsInInitiativeOrder() {
+        return this.initiativeOrder.map(id =>
+            this.encounterElements.find(el => el.id === id)
+        );
     }
 }
 
