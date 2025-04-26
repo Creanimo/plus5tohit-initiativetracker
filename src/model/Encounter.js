@@ -358,7 +358,7 @@ class Encounter {
 
     /**
      * Checks if all IDs in initiativeOrder exist in encounterElements.
-     * Optionally, checks for duplicates and missing IDs.
+     * Checks for duplicates and missing IDs.
      * @returns {boolean}
      */
     isInitiativeOrderValid() {
