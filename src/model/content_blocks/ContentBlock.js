@@ -4,7 +4,7 @@ import { dependencyInjection } from "../../tools/commonDependencies.js";
 'use strict';
 
 /**
- * @typedef {"block" | "rollButton"} ContentBlockTypes
+ * @typedef {"section" | "markdown" | "trackerBar" | "trackerSlots" | "rollButtons"} ContentBlockTypes
  */
 
 class ContentBlock {
@@ -33,12 +33,15 @@ class ContentBlock {
      */
     constructor({
         name,
-        id,
+        id = "",
         type = "block",
+        dependencies = dependencyInjection,
     }) {
         this._dependencies = dependencies;
         if (id === "") {
-            id = this._dependencies.createId();
+            this.id = this._dependencies.createId();
+        } else {
+            this.id = id;
         }
         this.name = name;
         this.type = type;
