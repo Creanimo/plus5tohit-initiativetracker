@@ -4,16 +4,21 @@ import { dependencyInjection } from "../../tools/commonDependencies.js";
 'use strict';
 
 /**
- * @typedef {"section" | "markdown" | "trackerBar" | "trackerSlots" | "rollButtons"} ContentBlockTypes
+ * @typedef {null | "section" | "markdown" | "trackerBar" | "trackerSlots" | "rollButtons"} ContentBlockTypes
  */
 
 class ContentBlock {
     [immerable] = true;
+    /**
+     * Actual type depends on child class
+     * @type {ContentBlockTypes}
+     */
+    static type = null;
 
     /**
      * @type {string}
      */
-    name;
+    title;
 
     /**
      * @type {string}
@@ -21,20 +26,14 @@ class ContentBlock {
     id;
 
     /**
-     * @type {ContentBlockTypes}
-     */
-    type;
-
-    /**
      *
-     * @param {string} name
+     * @param {string} title
      * @param {string} id
-     * @param {string} type
+     * @param {Dependencies} dependencies 
      */
     constructor({
-        name,
+        title,
         id = "",
-        type = "block",
         dependencies = dependencyInjection,
     }) {
         this._dependencies = dependencies;
@@ -43,20 +42,36 @@ class ContentBlock {
         } else {
             this.id = id;
         }
-        this.name = name;
-        this.type = type;
+        this.title = title;
     }
 
     /**
      *
      * @param {{}} updates
-     * @returns {EncounterElement}
+     * @returns {ContentBlock}
      * @private
      */
     _withUpdate(updates) {
         return produce(this, draft => {
             Object.assign(draft, updates)
         })
+    }
+
+    /**
+     * @param {string} id 
+     * @returns {ContentBlock}
+     */
+    withId(id) {
+        return this._withUpdate({id});
+    }
+
+    
+    /**
+     * @param {string} title 
+     * @returns {ContentBlock}
+     */
+    withTitle(title) {
+        return this._withUpdate({title});
     }
 }
 

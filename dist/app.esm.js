@@ -3275,7 +3275,7 @@ function requireGrammar () {
 	        {
 	            name: 'field$ebnf$1',
 	            postprocess: (d) => d[0].concat([d[1]]),
-	            symbols: ['field$ebnf$1', /[\w$.]/],
+	            symbols: ['field$ebnf$1', /[\w$.-]/],
 	        },
 	        {
 	            name: 'field',
@@ -4592,16 +4592,21 @@ class Dependencies {
 const dependencyInjection = new Dependencies();
 
 /**
- * @typedef {"creature"|"event"|"legendaryCreature"|"generic"} EncounterElementTypes
+ * @typedef {null | "section" | "markdown" | "trackerBar" | "trackerSlots" | "rollButtons"} ContentBlockTypes
  */
 
-class EncounterElement {
+class ContentBlock {
     [z] = true;
+    /**
+     * Actual type depends on child class
+     * @type {ContentBlockTypes}
+     */
+    static type = null;
 
     /**
      * @type {string}
      */
-    name;
+    title;
 
     /**
      * @type {string}
@@ -4609,49 +4614,29 @@ class EncounterElement {
     id;
 
     /**
-     * @type {EncounterElementTypes}
-     */
-    type;
-
-    /**
-     * @type {ContentBlock[]}
-     */
-    contents;
-
-    /**
-     * @type {Dependencies}
-     */
-    _dependencies;
-
-    /**
      *
-     * @param {string} name
+     * @param {string} title
      * @param {string} id
-     * @param {EncounterElementTypes} type
-     * @param {ContentBlock[]} content
-     * @param {Dependencies} dependencies
+     * @param {Dependencies} dependencies 
      */
     constructor({
-                    name,
-                    id = "",
-                    type = "generic",
-                    contents = [],
-                    dependencies = dependencyInjection,
+        title,
+        id = "",
+        dependencies = dependencyInjection,
     }) {
         this._dependencies = dependencies;
         if (id === "") {
-            id = this._dependencies.createId();
+            this.id = this._dependencies.createId();
+        } else {
+            this.id = id;
         }
-        this.id = id;
-        this.name = name;
-        this.contents = contents;
-        this.type = type;
+        this.title = title;
     }
 
     /**
      *
      * @param {{}} updates
-     * @returns {EncounterElement}
+     * @returns {ContentBlock}
      * @private
      */
     _withUpdate(updates) {
@@ -4661,29 +4646,63 @@ class EncounterElement {
     }
 
     /**
-     *
-     * @param {string} newName
-     * @returns {EncounterElement}
-     */
-    withName(newName) {
-        return this._withUpdate({name: newName})
-    }
-
-    /**
      * @param {string} id 
-     * @returns {EncounterElement} 
+     * @returns {ContentBlock}
      */
     withId(id) {
-        return this._withUpdate({ id })
+        return this._withUpdate({id});
+    }
+
+    
+    /**
+     * @param {string} title 
+     * @returns {ContentBlock}
+     */
+    withTitle(title) {
+        return this._withUpdate({title});
+    }
+}
+
+class ContentBlockMarkdown extends ContentBlock {
+    [z] = true;
+    /**
+     * Actual type depends on child class
+     * @type {ContentBlockTypes}
+     */
+    static type = "markdown";
+
+    /**
+     * @type {string}
+     */
+    textContent;
+
+    /*
+     *
+     * @param {string} title
+     * @param {string} id
+     * @param {Dependencies} dependencies 
+     * @param {ContentBlock[]} contentBlocks
+     */ 
+    constructor ({
+        title,
+        id = "",
+        dependencies = dependencyInjection,
+        textContent = ""
+    }) {
+        super({
+            title,
+            id,
+            dependencies,
+        });
+        this.textContent = textContent;
     }
 
     /**
-     *
-     * @param {ContentBlock[]} contents
-     * @returns {EncounterElement}
+     * @param {string} textContent 
+     * @returns {ContentBlockMarkdown}
      */
-    withContents(contents) {
-        return this._withUpdate({contents: contents})
+    withTextContent(textContent) {
+        return this._withUpdate({textContent});
     }
 }
 
@@ -4693,11 +4712,10 @@ window.process = {
     }
 };
 
-let firstEncounterElement = new EncounterElement({name: "A first name"});
-console.log(firstEncounterElement);
-firstEncounterElement.withName("Gnurx Goblin");
-console.log(firstEncounterElement);
-firstEncounterElement = firstEncounterElement.withName("Sarah Secondtry");
-console.log(firstEncounterElement);
-firstEncounterElement.name = "Change";
+let markdownStuff = new ContentBlockMarkdown({
+    title: "Description",
+    textContent: "# Hello\nThis is a wonderful **markdown** text."
+});
+
+console.log(JSON.stringify(markdownStuff));
 //# sourceMappingURL=app.esm.js.map

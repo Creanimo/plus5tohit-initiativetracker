@@ -21,6 +21,7 @@ class EncounterElement {
     id;
 
     /**
+     * Is not static because it depends on configuration.
      * @type {EncounterElementTypes}
      */
     type;

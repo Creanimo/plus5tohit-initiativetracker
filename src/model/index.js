@@ -1,6 +1,7 @@
 import Encounter from "./Encounter.js";
 import EncounterElement from "./encounter_elements/EncounterElement.js";
-import StatusEffect from "./encounter_elements/StatusEffect.js";
-import ContentBlock from "./content_blocks/ContentBlock";
+import ContentBlockMarkdown from "./content_blocks/ContentBlockMarkdown.js";
 
-export { Encounter, EncounterElement, StatusEffect, ContentBlock };
+export { Encounter,
+    EncounterElement,
+    ContentBlockMarkdown };

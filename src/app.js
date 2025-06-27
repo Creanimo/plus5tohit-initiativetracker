@@ -1,4 +1,4 @@
-import { EncounterElement } from "./modules.js";
+import { ContentBlockMarkdown } from "./modules.js";
 
 window.process = {
     env: {
@@ -6,10 +6,9 @@ window.process = {
     }
 };
 
-let firstEncounterElement = new EncounterElement({name: "A first name"});
-console.log(firstEncounterElement);
-firstEncounterElement.withName("Gnurx the Goblin");
-console.log(firstEncounterElement);
-firstEncounterElement = firstEncounterElement.withName("Sarah Secondtry");
-console.log(firstEncounterElement);
-firstEncounterElement.name = "Change";
+let markdownStuff = new ContentBlockMarkdown({
+    title: "Description",
+    textContent: "# Hello\nThis is a wonderful **markdown** text."
+})
+
+console.log(JSON.stringify(markdownStuff));

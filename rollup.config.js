@@ -5,7 +5,7 @@ export default {
     input: "./src/app.js",
     output: [
         {
-            file: "dist/app.esm.js",
+            file: "./dist/app.esm.js",
             format: "esm",
             sourcemap: true,
         },
