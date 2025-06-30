@@ -6,8 +6,14 @@
   "type": "module",
   "scripts": {
     "test": "mocha",
-    "build": "npx rollup -c rollup.config.js && cp src/index.html dist/index.html",
-    "start": "http-server -p 0 -P http://localhost:?"
+    "clean": "rimraf dist",
+    "copy": "cp src/index.html dist",
+    "watch:copy": "chokidar 'src/index.html' -c 'npm run copy'",
+    "rollup": "rollup -c",
+    "watch:rollup": "rollup -c --watch",
+    "build": "npm-run-all clean copy rollup",
+    "build:watch": "npm-run-all clean --parallel watch:copy watch:rollup",
+    "start": "http-server './dist' -p 0 -P http://localhost:?"
   },
   "author": "Ferdinand Engländer",
   "license": "MIT",
@@ -15,8 +21,11 @@
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "chai": "^5.2.0",
+    "chokidar-cli": "^3.0.0",
     "http-server": "^14.1.1",
     "mocha": "^11.1.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.0.1",
     "rollup": "^4.40.0"
   },
   "dependencies": {

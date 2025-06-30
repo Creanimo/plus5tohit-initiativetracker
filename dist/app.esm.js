@@ -5112,6 +5112,8 @@ let healthBar = new ContentBlockTrackerBar({
     isSecondaryExtendsPrimary: true,
 });
 
+console.log("Testing serialization from and to JSON");
+
 console.log("Creating an object, then stringify it to JSON:");
 let hansHero = new EncounterElement({
     name: "Hans Hero",
