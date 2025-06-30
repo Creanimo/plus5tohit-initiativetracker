@@ -4601,7 +4601,7 @@ class ContentBlock {
      * Actual type depends on child class
      * @type {ContentBlockTypes}
      */
-    static type = null;
+    type = null;
 
     /**
      * @type {string}
@@ -4614,29 +4614,37 @@ class ContentBlock {
     id;
 
     /**
+     * @type {Dependencies}
+     */
+    #dependencies;
+
+    /**
      *
      * @param {string} title
      * @param {string} id
+     * @param {string} type
      * @param {Dependencies} dependencies 
      */
     constructor({
         title,
         id = "",
+        type = null,
         dependencies = dependencyInjection,
     }) {
-        this._dependencies = dependencies;
+        this.#dependencies = dependencies;
         if (id === "") {
-            this.id = this._dependencies.createId();
+            this.id = this.#dependencies.createId();
         } else {
             this.id = id;
         }
         this.title = title;
+        this.type = type;
     }
 
     /**
      *
      * @param {{}} updates
-     * @returns {ContentBlock}
+     * @returns {this}
      * @private
      */
     _withUpdate(updates) {
@@ -4647,7 +4655,7 @@ class ContentBlock {
 
     /**
      * @param {string} id 
-     * @returns {ContentBlock}
+     * @returns {this}
      */
     withId(id) {
         return this._withUpdate({id});
@@ -4656,7 +4664,7 @@ class ContentBlock {
     
     /**
      * @param {string} title 
-     * @returns {ContentBlock}
+     * @returns {this}
      */
     withTitle(title) {
         return this._withUpdate({title});
@@ -4666,12 +4674,6 @@ class ContentBlock {
 class ContentBlockMarkdown extends ContentBlock {
     [z] = true;
     /**
-     * Actual type depends on child class
-     * @type {ContentBlockTypes}
-     */
-    static type = "markdown";
-
-    /**
      * @type {string}
      */
     textContent;
@@ -4680,18 +4682,21 @@ class ContentBlockMarkdown extends ContentBlock {
      *
      * @param {string} title
      * @param {string} id
+     * @param {string} type
      * @param {Dependencies} dependencies 
      * @param {ContentBlock[]} contentBlocks
      */ 
     constructor ({
         title,
         id = "",
+        type = "markdown",
         dependencies = dependencyInjection,
         textContent = ""
     }) {
         super({
             title,
             id,
+            type,
             dependencies,
         });
         this.textContent = textContent;
@@ -4702,7 +4707,384 @@ class ContentBlockMarkdown extends ContentBlock {
      * @returns {ContentBlockMarkdown}
      */
     withTextContent(textContent) {
-        return this._withUpdate({textContent});
+        return super._withUpdate({textContent});
+    }
+}
+
+/**
+ * ContentBlockTrackerBar represents a tracker bar content block.
+ * 
+ * @extends ContentBlock
+ */
+class ContentBlockTrackerBar extends ContentBlock {
+    [z] = true;
+    /**
+     * @type {string}
+     */
+    primaryLabel;
+
+    /**
+     * @type {string}
+     */
+    primaryDescription;
+
+    /**
+     * @type {number}
+     */
+    primaryMax;
+
+    /**
+     * @type {number}
+     */
+    primaryCurrent;
+
+    /**
+     * @type {string}
+     */
+    secondaryLabel;
+
+    /**
+     * @type {string}
+     */
+    secondaryDescription;
+
+    /**
+     * @type {number}
+     */
+    secondaryMax;
+
+    /**
+     * @type {number}
+     */
+    secondaryCurrent;
+
+    /**
+     * @type {boolean}
+     */
+    isSecondaryExtendsPrimary;
+
+    /**
+     * @param {Object} params
+     * @param {string} params.title
+     * @param {string} params.type
+     * @param {string} [params.id]
+     * @param {Dependencies} [params.dependencies]
+     * @param {string} params.primaryLabel
+     * @param {string} params.primaryDescription
+     * @param {number} params.primaryMax
+     * @param {number} params.primaryCurrent
+     * @param {string} params.secondaryLabel
+     * @param {string} params.secondaryDescription
+     * @param {number} params.secondaryMax
+     * @param {number} params.secondaryCurrent
+     * @param {boolean} [params.isSecondaryExtendsPrimary]
+     * @constructor
+     */
+    constructor({
+        title,
+        id = "",
+        type = "trackerBar",
+        dependencies = dependencyInjection,
+        primaryLabel,
+        primaryDescription,
+        primaryMax,
+        primaryCurrent,
+        secondaryLabel,
+        secondaryDescription,
+        secondaryMax,
+        secondaryCurrent,
+        isSecondaryExtendsPrimary = false,
+    }) {
+        super({
+            title,
+            id,
+            type,
+            dependencies,
+        });
+        this.primaryLabel = primaryLabel;
+        this.primaryDescription = primaryDescription;
+        this.primaryMax = primaryMax;
+        this.primaryCurrent = primaryCurrent;
+        this.secondaryLabel = secondaryLabel;
+        this.secondaryDescription = secondaryDescription;
+        this.secondaryMax = secondaryMax;
+        this.secondaryCurrent = secondaryCurrent;
+        this.isSecondaryExtendsPrimary = isSecondaryExtendsPrimary;
+    }
+
+    /**
+     * Returns a new instance with updated primaryLabel.
+     * @param {string} primaryLabel
+     * @returns {ContentBlockTrackerBar}
+     */
+    withPrimaryLabel(primaryLabel) {
+        return super._withUpdate({ primaryLabel });
+    }
+
+    /**
+     * Returns a new instance with updated primaryDescription.
+     * @param {string} primaryDescription
+     * @returns {ContentBlockTrackerBar}
+     */
+    withPrimaryDescription(primaryDescription) {
+        return super._withUpdate({ primaryDescription });
+    }
+
+    /**
+     * Returns a new instance with updated primaryMax.
+     * @param {number} primaryMax
+     * @returns {ContentBlockTrackerBar}
+     */
+    withPrimaryMax(primaryMax) {
+        return super._withUpdate({ primaryMax });
+    }
+
+    /**
+     * Returns a new instance with updated primaryCurrent.
+     * @param {number} primaryCurrent
+     * @returns {ContentBlockTrackerBar}
+     */
+    withPrimaryCurrent(primaryCurrent) {
+        return super._withUpdate({ primaryCurrent });
+    }
+
+    /**
+     * Returns a new instance with updated secondaryLabel.
+     * @param {string} secondaryLabel
+     * @returns {ContentBlockTrackerBar}
+     */
+    withSecondaryLabel(secondaryLabel) {
+        return super._withUpdate({ secondaryLabel });
+    }
+
+    /**
+     * Returns a new instance with updated secondaryDescription.
+     * @param {string} secondaryDescription
+     * @returns {ContentBlockTrackerBar}
+     */
+    withSecondaryDescription(secondaryDescription) {
+        return super._withUpdate({ secondaryDescription });
+    }
+
+    /**
+     * Returns a new instance with updated secondaryMax.
+     * @param {number} secondaryMax
+     * @returns {ContentBlockTrackerBar}
+     */
+    withSecondaryMax(secondaryMax) {
+        return super._withUpdate({ secondaryMax });
+    }
+
+    /**
+     * Returns a new instance with updated secondaryCurrent.
+     * @param {number} secondaryCurrent
+     * @returns {ContentBlockTrackerBar}
+     */
+    withSecondaryCurrent(secondaryCurrent) {
+        return super._withUpdate({ secondaryCurrent });
+    }
+
+    /**
+     * Returns a new instance with updated isSecondaryExtendsPrimary.
+     * @param {boolean} isSecondaryExtendsPrimary
+     * @returns {ContentBlockTrackerBar}
+     */
+    withIsSecondaryExtendsPrimary(isSecondaryExtendsPrimary) {
+        return super._withUpdate({ isSecondaryExtendsPrimary });
+    }
+}
+
+/**
+ * ContentBlockTrackerSlots represents a slot counter content block.
+ * 
+ * @extends ContentBlock
+ */
+class ContentBlockTrackerSlots extends ContentBlock {
+    [z] = true;
+    /**
+     * @type {string}
+     */
+    description;
+
+    /**
+     * @type {number}
+     */
+    maxSlots;
+
+    /**
+     * @type {number}
+     */
+    markedSlots;
+
+    /**
+     * @param {Object} params
+     * @param {string} params.title
+     * @param {string} params.id
+     * @param {string} params.type
+     * @param {Dependencies[]} params.dependencies
+     * @param {string} params.description
+     * @param {number} params.maxSlots
+     * @param {number} params.markedSlots
+     * @constructor
+     */
+    constructor({
+        title,
+        id = "",
+        type,
+        dependencies = dependencyInjection,
+        description,
+        maxSlots,
+        markedSlots,
+    }) {
+        super({
+            title,
+            id,
+            type,
+            dependencies,
+        });
+        this.description = description;
+        this.maxSlots = maxSlots;
+        this.markedSlots = markedSlots;
+    }
+
+    /**
+     * Returns a new instance with updated description.
+     * @param {string} description
+     * @returns {this}
+     */
+    withDescription(description) {
+        return super._withUpdate({ description });
+    }
+
+    /**
+     * Returns a new instance with updated maxSlots.
+     * @param {number} maxSlots
+     * @returns {this}
+     */
+    withMaxSlots(maxSlots) {
+        return super._withUpdate({ maxSlots });
+    }
+
+    /**
+     * Returns a new instance with updated markedSlots.
+     * @param {number} markedSlots
+     * @returns {this}
+     */
+    withMarkedSlots(markedSlots) {
+        return super._withUpdate({ markedSlots });
+    }
+}
+
+/**
+ * @typedef {"creature"|"event"|"legendaryCreature"|"generic"} EncounterElementTypes
+ */
+
+class EncounterElement {
+    [z] = true;
+
+    /**
+     * @type {string}
+     */
+    name;
+
+    /**
+     * @type {string}
+     */
+    id;
+
+    /**
+     * Is not static because it depends on configuration.
+     * @type {EncounterElementTypes}
+     */
+    type;
+
+    /**
+     * @type {ContentBlock[]}
+     */
+    contents;
+
+    /**
+     * @type {Dependencies}
+     */
+    #dependencies;
+
+    /**
+     * @param {Object} params
+     * @param {string} params.name
+     * @param {string} [params.id]
+     * @param {EncounterElementTypes} [params.type]
+     * @param {Array<Object|ContentBlock>} [params.contents]
+     * @param {Dependencies} [params.dependencies]
+     */
+    constructor({
+        name,
+        id = "",
+        type = "generic",
+        contents = [],
+        dependencies = dependencyInjection,
+    }) {
+        this.#dependencies = dependencies;
+        if (!id) {
+            id = this.#dependencies.createId();
+        }
+        this.id = id;
+        this.name = name;
+        this.type = type;
+
+        const contentTypeMap = {
+            markdown: ContentBlockMarkdown,
+            trackerBar: ContentBlockTrackerBar,
+            trackerSlots: ContentBlockTrackerSlots,
+        };
+
+        this.contents = contents.map((contentElement) => {
+            if (contentElement instanceof ContentBlock) {
+                return contentElement;
+            }
+            const ContentClass = contentTypeMap[contentElement.type];
+            if (ContentClass) {
+                return new ContentClass(contentElement);
+            }
+            throw new Error(`Unknown content type: ${contentElement.type}`);
+        });
+    }
+
+    /**
+     *
+     * @param {{}} updates
+     * @returns {EncounterElement}
+     * @private
+     */
+    _withUpdate(updates) {
+        return qt(this, draft => {
+            Object.assign(draft, updates);
+        })
+    }
+
+    /**
+     *
+     * @param {string} newName
+     * @returns {EncounterElement}
+     */
+    withName(newName) {
+        return this._withUpdate({ name: newName })
+    }
+
+    /**
+     * @param {string} id 
+     * @returns {EncounterElement} 
+     */
+    withId(id) {
+        return this._withUpdate({ id })
+    }
+
+    /**
+     *
+     * @param {ContentBlock[]} contents
+     * @returns {EncounterElement}
+     */
+    withContents(contents) {
+        return this._withUpdate({ contents: contents })
     }
 }
 
@@ -4717,5 +5099,28 @@ let markdownStuff = new ContentBlockMarkdown({
     textContent: "# Hello\nThis is a wonderful **markdown** text."
 });
 
-console.log(JSON.stringify(markdownStuff));
+let healthBar = new ContentBlockTrackerBar({
+    title: "",
+    primaryLabel: "HP",
+    primaryDescription: "Health Points",
+    primaryMax: 52,
+    primaryCurrent: 52,
+    secondaryLabel: "temp HP",
+    secondaryDescription: "Temporary Hit Points",
+    secondaryMax: 0,
+    secondaryCurrent: 0,
+    isSecondaryExtendsPrimary: true,
+});
+
+console.log("Creating an object, then stringify it to JSON:");
+let hansHero = new EncounterElement({
+    name: "Hans Hero",
+    contents: [healthBar, markdownStuff],
+});
+console.log(JSON.stringify(hansHero));
+
+console.log("Taking a JSON string, constructing EncounterElement from it.");
+let glarxTheGoblin = {"name":"Glarx the Goblin","id":"21125078","type":"generic","contents":[{"type":"trackerBar","title":"","id":"59113191","primaryLabel":"HP","primaryDescription":"Health Points","primaryMax":16,"primaryCurrent":8,"secondaryLabel":"temp HP","secondaryDescription":"Temporary Hit Points","secondaryMax":0,"secondaryCurrent":0,"isSecondaryExtendsPrimary":true},{"type":"markdown","title":"Description","id":"03211798","textContent":"A markdown **description** for Glarx the Goblin."}]};
+glarxTheGoblin = new EncounterElement(glarxTheGoblin);
+console.log(glarxTheGoblin);
 //# sourceMappingURL=app.esm.js.map

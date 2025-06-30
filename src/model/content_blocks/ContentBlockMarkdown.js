@@ -7,12 +7,6 @@ import ContentBlock from "./ContentBlock.js";
 class ContentBlockMarkdown extends ContentBlock {
     [immerable] = true;
     /**
-     * Actual type depends on child class
-     * @type {ContentBlockTypes}
-     */
-    static type = "markdown";
-
-    /**
      * @type {string}
      */
     textContent;
@@ -21,18 +15,21 @@ class ContentBlockMarkdown extends ContentBlock {
      *
      * @param {string} title
      * @param {string} id
+     * @param {string} type
      * @param {Dependencies} dependencies 
      * @param {ContentBlock[]} contentBlocks
      */ 
     constructor ({
         title,
         id = "",
+        type = "markdown",
         dependencies = dependencyInjection,
         textContent = ""
     }) {
         super({
             title,
             id,
+            type,
             dependencies,
         });
         this.textContent = textContent;
@@ -43,7 +40,7 @@ class ContentBlockMarkdown extends ContentBlock {
      * @returns {ContentBlockMarkdown}
      */
     withTextContent(textContent) {
-        return this._withUpdate({textContent});
+        return super._withUpdate({textContent});
     }
 }
 

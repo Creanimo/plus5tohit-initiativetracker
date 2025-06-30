@@ -1,5 +1,10 @@
 import { immerable, produce } from "../../../node_modules/immer/dist/immer.production.mjs";
 import { dependencyInjection } from "../../tools/commonDependencies.js";
+import ContentBlock from "../content_blocks/ContentBlock.js";
+import ContentBlockMarkdown from "../content_blocks/ContentBlockMarkdown.js";
+import ContentBlockSection from "../content_blocks/ContentBlockSection.js";
+import ContentBlockTrackerBar from "../content_blocks/ContentBlockTrackerBar.js";
+import ContentBlockTrackerSlots from "../content_blocks/ContentBlockTrackerSlots.js";
 
 "use strict";
 
@@ -34,31 +39,47 @@ class EncounterElement {
     /**
      * @type {Dependencies}
      */
-    _dependencies;
+    #dependencies;
 
     /**
-     *
-     * @param {string} name
-     * @param {string} id
-     * @param {EncounterElementTypes} type
-     * @param {ContentBlock[]} content
-     * @param {Dependencies} dependencies
+     * @param {Object} params
+     * @param {string} params.name
+     * @param {string} [params.id]
+     * @param {EncounterElementTypes} [params.type]
+     * @param {Array<Object|ContentBlock>} [params.contents]
+     * @param {Dependencies} [params.dependencies]
      */
     constructor({
-                    name,
-                    id = "",
-                    type = "generic",
-                    contents = [],
-                    dependencies = dependencyInjection,
+        name,
+        id = "",
+        type = "generic",
+        contents = [],
+        dependencies = dependencyInjection,
     }) {
-        this._dependencies = dependencies;
-        if (id === "") {
-            id = this._dependencies.createId();
+        this.#dependencies = dependencies;
+        if (!id) {
+            id = this.#dependencies.createId();
         }
         this.id = id;
         this.name = name;
-        this.contents = contents;
         this.type = type;
+
+        const contentTypeMap = {
+            markdown: ContentBlockMarkdown,
+            trackerBar: ContentBlockTrackerBar,
+            trackerSlots: ContentBlockTrackerSlots,
+        };
+
+        this.contents = contents.map((contentElement) => {
+            if (contentElement instanceof ContentBlock) {
+                return contentElement;
+            }
+            const ContentClass = contentTypeMap[contentElement.type];
+            if (ContentClass) {
+                return new ContentClass(contentElement);
+            }
+            throw new Error(`Unknown content type: ${contentElement.type}`);
+        });
     }
 
     /**
@@ -79,7 +100,7 @@ class EncounterElement {
      * @returns {EncounterElement}
      */
     withName(newName) {
-        return this._withUpdate({name: newName})
+        return this._withUpdate({ name: newName })
     }
 
     /**
@@ -96,7 +117,7 @@ class EncounterElement {
      * @returns {EncounterElement}
      */
     withContents(contents) {
-        return this._withUpdate({contents: contents})
+        return this._withUpdate({ contents: contents })
     }
 }
 

@@ -7,12 +7,6 @@ import ContentBlock from "./ContentBlock.js";
 class ContentBlockSection extends ContentBlock {
     [immerable] = true;
     /**
-     * Actual type depends on child class
-     * @type {ContentBlockTypes}
-     */
-    static type = "section";
-
-    /**
      * @type {ContentBlock[]}
      */
     contentBlocks;
@@ -31,12 +25,14 @@ class ContentBlockSection extends ContentBlock {
      *
      * @param {string} title
      * @param {string} id
+     * @param {string} type
      * @param {Dependencies} dependencies 
      * @param {ContentBlock[]} contentBlocks
      */ 
     constructor ({
         title,
         id = "",
+        type,
         dependencies = dependencyInjection,
         contentBlocks = null,
         isExpanded = true,
@@ -45,6 +41,7 @@ class ContentBlockSection extends ContentBlock {
         super({
             title,
             id,
+            type,
             dependencies,
         });
         this.contentBlocks = contentBlocks;
@@ -57,7 +54,7 @@ class ContentBlockSection extends ContentBlock {
      * @returns {ContentBlockSection}
      */
     withIsExpanded(isExpanded) {
-        return this._withUpdate({isExpanded});
+        return super._withUpdate({isExpanded});
     }
 
     /**
@@ -65,7 +62,7 @@ class ContentBlockSection extends ContentBlock {
      * @returns {ContentBlockSection}
      */
     withIsExpanded(isCollapsible) {
-        return this._withUpdate({isCollapsible});
+        return super._withUpdate({isCollapsible});
     }
 }
 

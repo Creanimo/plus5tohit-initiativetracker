@@ -13,7 +13,7 @@ class ContentBlock {
      * Actual type depends on child class
      * @type {ContentBlockTypes}
      */
-    static type = null;
+    type = null;
 
     /**
      * @type {string}
@@ -26,29 +26,37 @@ class ContentBlock {
     id;
 
     /**
+     * @type {Dependencies}
+     */
+    #dependencies;
+
+    /**
      *
      * @param {string} title
      * @param {string} id
+     * @param {string} type
      * @param {Dependencies} dependencies 
      */
     constructor({
         title,
         id = "",
+        type = null,
         dependencies = dependencyInjection,
     }) {
-        this._dependencies = dependencies;
+        this.#dependencies = dependencies;
         if (id === "") {
-            this.id = this._dependencies.createId();
+            this.id = this.#dependencies.createId();
         } else {
             this.id = id;
         }
         this.title = title;
+        this.type = type;
     }
 
     /**
      *
      * @param {{}} updates
-     * @returns {ContentBlock}
+     * @returns {this}
      * @private
      */
     _withUpdate(updates) {
@@ -59,7 +67,7 @@ class ContentBlock {
 
     /**
      * @param {string} id 
-     * @returns {ContentBlock}
+     * @returns {this}
      */
     withId(id) {
         return this._withUpdate({id});
@@ -68,7 +76,7 @@ class ContentBlock {
     
     /**
      * @param {string} title 
-     * @returns {ContentBlock}
+     * @returns {this}
      */
     withTitle(title) {
         return this._withUpdate({title});
