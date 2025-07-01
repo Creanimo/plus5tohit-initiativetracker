@@ -45,12 +45,16 @@ class ContentBlock {
     }) {
         this.#dependencies = dependencies;
         if (id === "") {
-            this.id = this.#dependencies.createId();
+            this.id = this._dependencies.createId();
         } else {
             this.id = id;
         }
         this.title = title;
         this.type = type;
+    }
+
+    get _dependencies() {
+        return this.#dependencies;
     }
 
     /**

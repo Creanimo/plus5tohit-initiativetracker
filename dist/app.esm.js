@@ -4582,15 +4582,6 @@ const createId = (length = 8) => {
     .slice(0, length);
 };
 
-class Dependencies {
-    constructor() {
-        this.log = browserExports.Roarr;
-        this.createId = createId;
-    }
-}
-
-const dependencyInjection = new Dependencies();
-
 /**
  * @typedef {null | "section" | "markdown" | "trackerBar" | "trackerSlots" | "rollButtons"} ContentBlockTypes
  */
@@ -4633,12 +4624,16 @@ class ContentBlock {
     }) {
         this.#dependencies = dependencies;
         if (id === "") {
-            this.id = this.#dependencies.createId();
+            this.id = this._dependencies.createId();
         } else {
             this.id = id;
         }
         this.title = title;
         this.type = type;
+    }
+
+    get _dependencies() {
+        return this.#dependencies;
     }
 
     /**
@@ -4708,6 +4703,101 @@ class ContentBlockMarkdown extends ContentBlock {
      */
     withTextContent(textContent) {
         return super._withUpdate({textContent});
+    }
+}
+
+/**
+ * @typedef {Object} Section
+ * @property {string} label
+ * @property {string} id
+ * @property {ContentBlock} content
+ * @property {boolean} isCollapsible
+ * @property {boolean} isExpanded
+ */
+
+class ContentBlockSections extends ContentBlock {
+    [z] = true;
+    /**
+     * @type {Section[]}
+     */
+    sections;
+
+    /**
+     * @type {boolean}
+     */
+    isCollapsible;
+
+    /**
+     * @type {boolean}
+     */
+    hasCloseOthersOnExpand;
+
+    /*
+     *
+     * @param {string} title
+     * @param {string} id
+     * @param {string} type
+     * @param {Dependencies} dependencies 
+     * @param {Section[]} sections
+     * @param {boolean} isCollapsible
+     * @param {boolean} hasCloseOthersOnExpand
+     * @constructor
+     */
+    constructor({
+        title,
+        id = "",
+        type = "sections",
+        dependencies = dependencyInjection,
+        sections = [],
+        isCollapsible = true,
+        hasCloseOthersOnExpand = false,
+    }) {
+        super({
+            title,
+            id,
+            type,
+            dependencies,
+        });
+
+        this.sections = sections.map(section => ({
+            ...section,
+            content: this._dependencies.createContentBlock(section.content)
+        }));
+
+        this.isCollapsible = isCollapsible;
+
+        if (!this.isCollapsible && hasCloseOthersOnExpand) {
+            this._dependencies.log.warn(
+                "Contradicting data: Sections are not collapsible, yet set to collapse other sections when one expands.\nSetting hasCloseOthersOnExpand to false."
+            );
+            this.hasCloseOthersOnExpand = false;
+        } else {
+            this.hasCloseOthersOnExpand = hasCloseOthersOnExpand;
+        }
+    }
+
+    /**
+     * @param {Section[]} sections
+     * @returns {this}
+     */
+    withSections(sections) {
+        return super._withUpdate({ sections })
+    }
+
+    /**
+     * @param {boolean} isCollapsible
+     * @returns {this}
+     */
+    withIsCollapsible(isCollapsible) {
+        return super._withUpdate({ isCollapsible });
+    }
+
+    /**
+     * @param {boolean} hasCloseOthersOnExpand
+     * @returns {this}
+     */
+    withHasCloseOthersOnExpand(hasCloseOthersOnExpand) {
+        return super._withUpdate({ hasCloseOthersOnExpand });
     }
 }
 
@@ -4976,6 +5066,38 @@ class ContentBlockTrackerSlots extends ContentBlock {
 }
 
 /**
+ * @param {Object|ContentBlock} data
+ * @returns {ContentBlock}
+ */
+function createContentBlock(data) {
+    if (data instanceof ContentBlock) {
+        return data;
+    }
+    switch (data.type) {
+        case "markdown":
+            return new ContentBlockMarkdown(data);
+        case "sections":
+            return new ContentBlockSections(data);
+        case "trackerBar":
+            return new ContentBlockTrackerBar(data);
+        case "trackerSlots":
+            return new ContentBlockTrackerSlots(data);
+        default:
+            throw new Error(`Unknown content block type: ${data.type}`);
+    }
+}
+
+class Dependencies {
+    constructor() {
+        this.log = browserExports.Roarr;
+        this.createId = createId;
+        this.createContentBlock = createContentBlock; 
+    }
+}
+
+const dependencyInjection = new Dependencies();
+
+/**
  * @typedef {"creature"|"event"|"legendaryCreature"|"generic"} EncounterElementTypes
  */
 
@@ -5025,28 +5147,17 @@ class EncounterElement {
     }) {
         this.#dependencies = dependencies;
         if (!id) {
-            id = this.#dependencies.createId();
+            id = this._dependencies.createId();
         }
         this.id = id;
         this.name = name;
         this.type = type;
 
-        const contentTypeMap = {
-            markdown: ContentBlockMarkdown,
-            trackerBar: ContentBlockTrackerBar,
-            trackerSlots: ContentBlockTrackerSlots,
-        };
+        this.contents = contents.map(contentElement => this._dependencies.createContentBlock(contentElement));
+    }
 
-        this.contents = contents.map((contentElement) => {
-            if (contentElement instanceof ContentBlock) {
-                return contentElement;
-            }
-            const ContentClass = contentTypeMap[contentElement.type];
-            if (ContentClass) {
-                return new ContentClass(contentElement);
-            }
-            throw new Error(`Unknown content type: ${contentElement.type}`);
-        });
+    get _dependencies() {
+        return this.#dependencies;
     }
 
     /**

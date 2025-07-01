@@ -1,10 +1,6 @@
 import { immerable, produce } from "../../../node_modules/immer/dist/immer.production.mjs";
 import { dependencyInjection } from "../../tools/commonDependencies.js";
 import ContentBlock from "../content_blocks/ContentBlock.js";
-import ContentBlockMarkdown from "../content_blocks/ContentBlockMarkdown.js";
-import ContentBlockSection from "../content_blocks/ContentBlockSection.js";
-import ContentBlockTrackerBar from "../content_blocks/ContentBlockTrackerBar.js";
-import ContentBlockTrackerSlots from "../content_blocks/ContentBlockTrackerSlots.js";
 
 "use strict";
 
@@ -58,28 +54,17 @@ class EncounterElement {
     }) {
         this.#dependencies = dependencies;
         if (!id) {
-            id = this.#dependencies.createId();
+            id = this._dependencies.createId();
         }
         this.id = id;
         this.name = name;
         this.type = type;
 
-        const contentTypeMap = {
-            markdown: ContentBlockMarkdown,
-            trackerBar: ContentBlockTrackerBar,
-            trackerSlots: ContentBlockTrackerSlots,
-        };
+        this.contents = contents.map(contentElement => this._dependencies.createContentBlock(contentElement));
+    }
 
-        this.contents = contents.map((contentElement) => {
-            if (contentElement instanceof ContentBlock) {
-                return contentElement;
-            }
-            const ContentClass = contentTypeMap[contentElement.type];
-            if (ContentClass) {
-                return new ContentClass(contentElement);
-            }
-            throw new Error(`Unknown content type: ${contentElement.type}`);
-        });
+    get _dependencies() {
+        return this.#dependencies;
     }
 
     /**
